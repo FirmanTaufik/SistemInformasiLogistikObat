@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/txtNo"
+        android:background="@drawable/textview_border"
+        android:padding="10dp"
+        android:text="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/txtSumber"
+        android:background="@drawable/textview_border"
+        android:padding="10dp"
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/txtName"
+        android:background="@drawable/textview_border"
+        android:padding="10dp"
+        android:text="Nama Obat/Alkes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/txtJmlMasuk"
+        android:background="@drawable/textview_border"
+        android:padding="10dp"
+        android:text="Jumlah"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/txtTglExp"
+        android:background="@drawable/textview_border"
+        android:padding="10dp"
+        android:text="Tanggal Expired"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</TableRow>

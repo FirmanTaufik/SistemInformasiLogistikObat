@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:background="@color/bgMain"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.MainActivity">
+
+   <LinearLayout
+       android:orientation="vertical"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+      <RelativeLayout
+          android:id="@+id/rel"
+          android:padding="5dp"
+          android:background="@drawable/header_backgorund"
+          android:layout_width="match_parent"
+          android:layout_height="100dp">
+         <de.hdodenhof.circleimageview.CircleImageView
+             android:id="@+id/img"
+             app:civ_circle_background_color="@color/white"
+             app:civ_border_color="@color/white"
+             app:civ_border_width="2dp"
+             android:scaleType="centerCrop"
+             android:src="@mipmap/ic_logo"
+             android:layout_width="80dp"
+             android:layout_height="80dp"/>
+
+         <LinearLayout
+             android:layout_toLeftOf="@+id/btnLogout"
+             android:orientation="vertical"
+             android:layout_centerVertical="true"
+             android:layout_toRightOf="@id/img"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txtUsername"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:layout_marginLeft="10dp"
+                style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                android:textColor="@color/white"
+                android:text="@string/app_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/txtName"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:layout_marginLeft="10dp"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/white"
+                android:text="@string/app_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+         </LinearLayout>
+         <ImageButton
+             android:onClick="logout"
+             android:layout_centerVertical="true"
+             android:scaleType="centerCrop"
+             android:id="@+id/btnLogout"
+             android:layout_alignParentRight="true"
+             android:background="@android:color/transparent"
+             android:src="@drawable/ic_baseline_logout_24"
+             android:layout_width="40dp"
+             android:layout_height="40dp"/>
+      </RelativeLayout>
+
+      <androidx.core.widget.NestedScrollView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+         <LinearLayout
+             android:id="@+id/wadah"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+               <com.balysv.materialripple.MaterialRippleLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                  <LinearLayout
+                      android:gravity="center"
+                      android:onClick="toSupplier"
+                      android:padding="5dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+                     <ImageView
+                         android:src="@drawable/ic_delivery_truck"
+                         android:layout_width="50dp"
+                         android:layout_height="50dp"/>
+
+                     <TextView
+                         style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                         android:layout_marginLeft="10dp"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="center_vertical"
+                         android:text="Data Supplier"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"/>
+
+
+                  </LinearLayout>
+               </com.balysv.materialripple.MaterialRippleLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+               <com.balysv.materialripple.MaterialRippleLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                  <LinearLayout
+                      android:onClick="toObatAlkes"
+                      android:padding="5dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+                     <ImageView
+                         android:src="@drawable/ic_packages"
+                         android:layout_width="50dp"
+                         android:layout_height="50dp"/>
+
+                     <TextView
+                         style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                         android:layout_marginLeft="10dp"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="center_vertical"
+                         android:text="Data Obat/Alkes"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"/>
+                  </LinearLayout>
+               </com.balysv.materialripple.MaterialRippleLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+               <com.balysv.materialripple.MaterialRippleLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                  <LinearLayout
+                      android:onClick="toStockMasuk"
+                      android:padding="5dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+                     <ImageView
+                         android:src="@drawable/ic_buy"
+                         android:layout_width="50dp"
+                         android:layout_height="50dp"/>
+
+                     <TextView
+                         style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                         android:layout_marginLeft="10dp"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="center_vertical"
+                         android:text="Data Stock Masuk"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"/>
+                  </LinearLayout>
+               </com.balysv.materialripple.MaterialRippleLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+               <com.balysv.materialripple.MaterialRippleLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                  <LinearLayout
+                      android:onClick="toStockKeluar"
+                      android:padding="5dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+                     <ImageView
+                         android:src="@drawable/ic_sell"
+                         android:layout_width="50dp"
+                         android:layout_height="50dp"/>
+
+                     <TextView
+                         style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                         android:layout_marginLeft="10dp"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="center_vertical"
+                         android:text="Data Stock Keluar"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"/>
+                  </LinearLayout>
+               </com.balysv.materialripple.MaterialRippleLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+               <com.balysv.materialripple.MaterialRippleLayout
+                   android:layout_gravity="center"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                  <LinearLayout
+                      android:onClick="toMutasi"
+                      android:padding="5dp"
+                      android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+                     <ImageView
+                         android:src="@drawable/ic_analysis"
+                         android:layout_width="50dp"
+                         android:layout_height="50dp"/>
+
+                     <TextView
+                         style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                         android:layout_marginLeft="10dp"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="center_vertical"
+                         android:text="Mutasi Obat/Alkes"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"/>
+                  </LinearLayout>
+               </com.balysv.materialripple.MaterialRippleLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+               <com.balysv.materialripple.MaterialRippleLayout
+                   android:layout_gravity="center"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                  <LinearLayout
+                      android:onClick="toKaryawan"
+                      android:padding="5dp"
+                      android:orientation="horizontal"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+                     <ImageView
+                         android:src="@drawable/employ"
+                         android:layout_width="50dp"
+                         android:layout_height="50dp"/>
+
+                     <TextView
+                         style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                         android:layout_marginLeft="10dp"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="center_vertical"
+                         android:text="Data Karyawan"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"/>
+                  </LinearLayout>
+               </com.balysv.materialripple.MaterialRippleLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+               <com.balysv.materialripple.MaterialRippleLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                  <LinearLayout
+                      android:onClick="toSetting"
+                      android:padding="5dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+                     <ImageView
+                         android:src="@drawable/ic_setting"
+                         android:layout_width="50dp"
+                         android:layout_height="50dp"/>
+
+                     <TextView
+                         style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                         android:layout_marginLeft="10dp"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="center_vertical"
+                         android:text="Setting"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"/>
+                  </LinearLayout>
+               </com.balysv.materialripple.MaterialRippleLayout>
+            </androidx.cardview.widget.CardView>
+
+         </LinearLayout>
+
+      </androidx.core.widget.NestedScrollView>
+
+   </LinearLayout>
+
+</RelativeLayout>
+
+<!--    <?xml version="1.0" encoding="utf-8"?>-->
+<!--<RelativeLayout-->
+<!--android:background="@color/bgMain"-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--tools:context=".Activity.MainActivity">-->
+
+<!--<LinearLayout-->
+<!--    android:orientation="vertical"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent">-->
+<!--   <RelativeLayout-->
+<!--       android:id="@+id/rel"-->
+<!--       android:padding="5dp"-->
+<!--       android:background="@drawable/header_backgorund"-->
+<!--       android:layout_width="match_parent"-->
+<!--       android:layout_height="100dp">-->
+<!--      <de.hdodenhof.circleimageview.CircleImageView-->
+<!--          android:id="@+id/img"-->
+<!--          app:civ_circle_background_color="@color/white"-->
+<!--          app:civ_border_color="@color/white"-->
+<!--          app:civ_border_width="2dp"-->
+<!--          android:scaleType="centerCrop"-->
+<!--          android:src="@mipmap/ic_logo"-->
+<!--          android:layout_width="80dp"-->
+<!--          android:layout_height="80dp"/>-->
+
+<!--      <LinearLayout-->
+<!--          android:layout_toLeftOf="@+id/btnLogout"-->
+<!--          android:orientation="vertical"-->
+<!--          android:layout_centerVertical="true"-->
+<!--          android:layout_toRightOf="@id/img"-->
+<!--          android:layout_width="match_parent"-->
+<!--          android:layout_height="wrap_content">-->
+<!--         <TextView-->
+<!--             android:id="@+id/txtUsername"-->
+<!--             android:ellipsize="end"-->
+<!--             android:maxLines="2"-->
+<!--             android:layout_marginLeft="10dp"-->
+<!--             style="@style/TextAppearance.AppCompat.SearchResult.Title"-->
+<!--             android:textColor="@color/white"-->
+<!--             android:text="@string/app_name"-->
+<!--             android:layout_width="match_parent"-->
+<!--             android:layout_height="wrap_content"/>-->
+<!--         <TextView-->
+<!--             android:id="@+id/txtName"-->
+<!--             android:ellipsize="end"-->
+<!--             android:maxLines="1"-->
+<!--             android:layout_marginLeft="10dp"-->
+<!--             style="@style/TextAppearance.AppCompat.Body1"-->
+<!--             android:textColor="@color/white"-->
+<!--             android:text="@string/app_name"-->
+<!--             android:layout_width="match_parent"-->
+<!--             android:layout_height="wrap_content"/>-->
+<!--      </LinearLayout>-->
+<!--      <ImageButton-->
+<!--          android:onClick="logout"-->
+<!--          android:layout_centerVertical="true"-->
+<!--          android:scaleType="centerCrop"-->
+<!--          android:id="@+id/btnLogout"-->
+<!--          android:layout_alignParentRight="true"-->
+<!--          android:background="@android:color/transparent"-->
+<!--          android:src="@drawable/ic_baseline_logout_24"-->
+<!--          android:layout_width="40dp"-->
+<!--          android:layout_height="40dp"/>-->
+<!--   </RelativeLayout>-->
+
+<!--   <androidx.core.widget.NestedScrollView-->
+<!--       android:layout_width="match_parent"-->
+<!--       android:layout_height="match_parent">-->
+<!--      <LinearLayout-->
+<!--          android:id="@+id/wadah"-->
+<!--          android:orientation="vertical"-->
+<!--          android:layout_width="match_parent"-->
+<!--          android:layout_height="wrap_content">-->
+
+<!--         <androidx.cardview.widget.CardView-->
+<!--             app:cardCornerRadius="5dp"-->
+<!--             app:cardUseCompatPadding="true"-->
+<!--             app:cardElevation="5dp"-->
+<!--             android:layout_width="match_parent"-->
+<!--             android:layout_height="wrap_content">-->
+
+<!--            <com.balysv.materialripple.MaterialRippleLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
+<!--               <LinearLayout-->
+<!--                   android:onClick="toMutasi"-->
+<!--                   android:padding="5dp"-->
+<!--                   android:orientation="horizontal"-->
+<!--                   android:layout_width="match_parent"-->
+<!--                   android:layout_height="wrap_content">-->
+
+<!--                  <ImageView-->
+<!--                      android:src="@drawable/ic_analysis"-->
+<!--                      android:layout_width="50dp"-->
+<!--                      android:layout_height="50dp"/>-->
+
+<!--                  <TextView-->
+<!--                      style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"-->
+<!--                      android:layout_marginLeft="10dp"-->
+<!--                      android:layout_gravity="center_vertical"-->
+<!--                      android:gravity="center_vertical"-->
+<!--                      android:text="Mutasi Obat/Alkes"-->
+<!--                      android:layout_width="match_parent"-->
+<!--                      android:layout_height="wrap_content"/>-->
+<!--               </LinearLayout>-->
+<!--            </com.balysv.materialripple.MaterialRippleLayout>-->
+<!--         </androidx.cardview.widget.CardView>-->
+
+
+<!--      </LinearLayout>-->
+
+<!--   </androidx.core.widget.NestedScrollView>-->
+
+<!--</LinearLayout>-->
+
+<!--</RelativeLayout>-->

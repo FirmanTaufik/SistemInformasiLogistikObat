@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "524739601143",
+    "firebase_url": "https://sistem-informasi-logistik-obat-default-rtdb.firebaseio.com",
+    "project_id": "sistem-informasi-logistik-obat",
+    "storage_bucket": "sistem-informasi-logistik-obat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524739601143:android:1e921688e3356211bc69f2",
+        "android_client_info": {
+          "package_name": "com.rentalapp.sisteminformasilogistikobat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "524739601143-k0rserjt0ld7soskk3c1bfleqlk0qubi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rentalapp.sisteminformasilogistikobat",
+            "certificate_hash": "122c81a07348d1994785549780e3418981886b6f"
+          }
+        },
+        {
+          "client_id": "524739601143-vp609o8v2ug8o4ulqobk3n19kqijeus1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSxUn25QqKuMy3PW-yecmJl7W5pIzEhrY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "524739601143-vp609o8v2ug8o4ulqobk3n19kqijeus1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

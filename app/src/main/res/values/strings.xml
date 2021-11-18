@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Sistem Informasi Logistik Obat</string>
+    <string name="ig">\@freebruarry</string>
+
+    <string-array name="level">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:padding="10dp"
+    android:background="@color/white"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_toLeftOf="@+id/imgBtn"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/linear"
+                android:id="@+id/txtName"
+                android:textColor="@color/black"
+                android:text="@string/app_name"
+                style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_marginRight="10dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/linear"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:visibility="gone"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/txtWarnExp"
+                    android:textAlignment="center"
+                    android:paddingRight="7dp"
+                    android:paddingLeft="7dp"
+                    android:background="@drawable/bg_round_sisa"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/txtWarnSisa"
+                    android:textColor="@color/white"
+                    android:text="1"
+                    style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:visibility="gone"
+                    android:textAlignment="center"
+                    android:paddingRight="7dp"
+                    android:paddingLeft="7dp"
+                    android:background="@drawable/bg_round_exp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/txtWarnExp"
+                    android:textColor="@color/white"
+                    android:text="1"
+                    style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/expandable_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:el_duration="300"
+            app:el_expanded="false">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/txtPack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="4dp"
+                    android:padding="5dp"
+                    android:text="Content"
+                    android:textColor="@android:color/darker_gray"  />
+
+                <TextView
+                    android:id="@+id/txtMasuk"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="4dp"
+                    android:padding="5dp"
+                    android:text="Content"
+                    android:textColor="@android:color/darker_gray"  />
+                <TextView
+                    android:id="@+id/txtKeluar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="4dp"
+                    android:padding="5dp"
+                    android:text="Content"
+                    android:textColor="@android:color/darker_gray"  />
+                <TextView
+                    android:id="@+id/txtSisa"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="4dp"
+                    android:padding="5dp"
+                    android:text="Content"
+                    android:textColor="@android:color/darker_gray"  />
+            </LinearLayout>
+        </net.cachapa.expandablelayout.ExpandableLayout>
+    </LinearLayout>
+
+    <ImageButton
+        android:scaleType="centerCrop"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_baseline_more_vert_24"
+        android:id="@+id/imgBtn"
+        android:layout_alignParentRight="true"
+        android:layout_width="20dp"
+        android:layout_height="30dp"/>
+
+</RelativeLayout>
