@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rentalapp.sisteminformasilogistikobat.Activity.DetailActivity;
 import com.rentalapp.sisteminformasilogistikobat.Activity.InOutActivity;
 import com.rentalapp.sisteminformasilogistikobat.Activity.LitsAddOutActivity;
 import com.rentalapp.sisteminformasilogistikobat.Model.ListModel;
@@ -75,24 +76,25 @@ public class MasukAdapter extends RecyclerView.Adapter<MasukAdapter.ViewHolder>i
     public void onBindViewHolder(@NonNull MasukAdapter.ViewHolder holder, int position) {
         constant = new Constant(context);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        holder.txtSumber.setText("Sumber Dana : "+constant.getSumberNameById(masukModels.get(position).getSumberId()));
+    //    holder.txtSumber.setText("Sumber Dana : "+constant.getSumberNameById(masukModels.get(position).getSumberId()));
      //   holder.txtJmlMasuk.setText("Jumlah Masuk : "+masukModels.get(position).getJmlMasuk());
         holder.txtTglMasuk.setText("Tanggal :  "+constant.changeFromLong(masukModels.get(position).getTglMasuk()));
       //  holder.txtTglExp.setText("Tanggal Expired :  "+constant.changeFromLong(masukModels.get(position).getTglExp()));
-        holder.txtSupplier.setText("Supplier : "+getSupplierName(masukModels.get(position).getSupplierId()));
-        setNamePack(holder, position);
+       // holder.txtSupplier.setText("Supplier : "+getSupplierName(masukModels.get(position).getSupplierId()));
+      //  setNamePack(holder, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             boolean isExpand= false;
             @Override
             public void onClick(View v) {
-               // holder.expandable_layout.setExpanded(true, false);
-                if (isExpand) {
-                    holder.expandable_layout.collapse(true);
-                    isExpand=false;
-                }else {
-                    holder.expandable_layout.expand(true);
-                    isExpand=true;
-                }
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("isMasuk", true);
+                intent.putExtra("supplier", "Supplier : "+getSupplierName(masukModels.get(position).getSupplierId()));
+                intent.putExtra("sumberDana","Sumber Dana : "+constant.getSumberNameById(masukModels.get(position).getSumberId()) );
+                intent.putExtra("tanggal",holder.txtTglMasuk.getText().toString().trim());
+                intent.putParcelableArrayListExtra("listObat",obatModels);
+                intent.putParcelableArrayListExtra("listSupplier",supplierModels);
+                intent.putExtra("idMasuk", masukModels.get(position).getMasukId());
+                context.startActivity(intent);
             }
         });
         holder.imgBtn.setOnClickListener(new View.OnClickListener() {
@@ -250,18 +252,14 @@ public class MasukAdapter extends RecyclerView.Adapter<MasukAdapter.ViewHolder>i
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView  txtSumber,txtTglMasuk,
-                 txtSupplier;
-        private ExpandableLayout expandable_layout;
+        private TextView  txtTglMasuk;
         private ImageButton imgBtn;
         private TableLayout tableLayout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tableLayout = itemView.findViewById(R.id.tableLayout);
-            txtSupplier = itemView.findViewById(R.id.txtSupplier);
-            txtSumber = itemView.findViewById(R.id.txtSumber);
+          //  txtSumber = itemView.findViewById(R.id.txtSumber);
             txtTglMasuk = itemView.findViewById(R.id.txtTglMasuk);
-            expandable_layout = itemView.findViewById(R.id.expandable_layout);
             imgBtn = itemView.findViewById(R.id.imgBtn);
 
         }

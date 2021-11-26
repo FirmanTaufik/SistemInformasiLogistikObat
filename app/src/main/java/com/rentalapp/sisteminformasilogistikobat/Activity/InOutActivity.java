@@ -92,17 +92,17 @@ public class InOutActivity extends AppCompatActivity {
         });
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-    }
-
-    @Override
-    protected void onResume() {
         if (getIntent().getBooleanExtra("isIn", true)) {
             setUiMasuk();
         }else {
             setUiKeluar();
         }
+
+    }
+
+    @Override
+    protected void onResume() {
+
         super.onResume();
     }
 
