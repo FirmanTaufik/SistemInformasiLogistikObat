@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.rentalapp.sisteminformasilogistikobat.Activity.DetailActivity;
 import com.rentalapp.sisteminformasilogistikobat.Activity.InOutActivity;
 import com.rentalapp.sisteminformasilogistikobat.Activity.LitsAddOutActivity;
 import com.rentalapp.sisteminformasilogistikobat.Model.KeluarModel;
@@ -54,7 +55,6 @@ public class KeluarAdapter extends RecyclerView.Adapter<KeluarAdapter.ViewHolder
     private List<KeluarModel> keluarModels;
     private List<KeluarModel> dataListfull = new ArrayList<>();
     private ArrayList<ObatModel> obatModels;
-    private ArrayList<SupplierModel> supplierModels;
     private DatabaseReference mDatabase;
     private Constant constant;
 
@@ -77,26 +77,22 @@ public class KeluarAdapter extends RecyclerView.Adapter<KeluarAdapter.ViewHolder
     public void onBindViewHolder(@NonNull KeluarAdapter.ViewHolder holder, int position) {
         constant = new Constant(context);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        holder.txtSumber.setVisibility(View.GONE);
-        holder.txtSumber1.setVisibility(View.VISIBLE);
        // holder.txtSumber.setText("Sumber Dana : "+constant.getSumberNameById(keluarModels.get(position).getSumberId()));
        // holder.txtJmlMasuk.setText("Jumlah Keluar : "+keluarModels.get(position).getJmlKeluar());
         holder.txtTglMasuk.setText("Tanggal :  "+constant.changeFromLong(keluarModels.get(position).getTglKeluar()));
        // holder.txtTglExp.setText("Tanggal Expired :  "+constant.changeFromLong(keluarModels.get(position).getTglExp()));
-        holder.txtSupplier.setText("Faskes : "+getFaskesName(keluarModels.get(position).getFaskesId()));
-        setNamePack(holder, position);
+     //   holder.txtSupplier.setText("Faskes : "+getFaskesName(keluarModels.get(position).getFaskesId()));
+       // setNamePack(holder, position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             boolean isExpand= false;
             @Override
             public void onClick(View v) {
-               // holder.expandable_layout.setExpanded(true, false);
-                if (isExpand) {
-                    holder.expandable_layout.collapse(true);
-                    isExpand=false;
-                }else {
-                    holder.expandable_layout.expand(true);
-                    isExpand=true;
-                }
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("faskes","Faskes : "+getFaskesName(keluarModels.get(position).getFaskesId()) );
+                intent.putExtra("idKeluar",keluarModels.get(position).getKeluarId() );
+                intent.putExtra("tanggal",holder.txtTglMasuk.getText().toString().trim());
+                intent.putParcelableArrayListExtra("listObat",obatModels);
+                context.startActivity(intent);
             }
         });
 
@@ -203,7 +199,6 @@ public class KeluarAdapter extends RecyclerView.Adapter<KeluarAdapter.ViewHolder
 
     private void editKeluar(int position) {
         Intent intent = new Intent(context, LitsAddOutActivity.class);
-        intent.putExtra("supplierModels",supplierModels);
         intent.putExtra("obatModels",obatModels);
         intent.putExtra("keluarId", keluarModels.get(position).getKeluarId());
       //  intent.putExtra("sumberId", keluarModels.get(position).getSumberId());
@@ -264,19 +259,13 @@ public class KeluarAdapter extends RecyclerView.Adapter<KeluarAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView  txtSumber,txtTglMasuk,
-                txtSupplier,txtSumber1;
-        private ExpandableLayout expandable_layout;
+        private TextView  txtTglMasuk;
         private TableLayout tableLayout;
         private ImageButton imgBtn;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtSumber1 = itemView.findViewById(R.id.txtSumber1);
             tableLayout = itemView.findViewById(R.id.tableLayout);
-            txtSupplier = itemView.findViewById(R.id.txtSupplier);
-            txtSumber = itemView.findViewById(R.id.txtSumber);
             txtTglMasuk = itemView.findViewById(R.id.txtTglMasuk);
-            expandable_layout = itemView.findViewById(R.id.expandable_layout);
             imgBtn = itemView.findViewById(R.id.imgBtn);
 
         }

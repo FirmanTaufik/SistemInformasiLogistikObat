@@ -28,7 +28,7 @@ public class DetailActivity extends AppCompatActivity {
     private TableLayout tableLayout;
     private Constant constant;
     private ArrayList<ObatModel> obatModels;
-    private TextView txtSupplier, txtSumber;
+    private TextView txtSupplier, txtSumber,txtSumber1;
     private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,7 @@ public class DetailActivity extends AppCompatActivity {
         tableLayout = findViewById(R.id.tableLayout);
         txtSupplier = findViewById(R.id.txtSupplier);
         txtSumber = findViewById(R.id.txtSumber);
+        txtSumber1 = findViewById(R.id.txtSumber1);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getIntent().getStringExtra("tanggal"));
         setSupportActionBar(toolbar);
@@ -56,9 +57,50 @@ public class DetailActivity extends AppCompatActivity {
         if (getIntent().hasExtra("isMasuk")){
             getDataMasuk();
         }else {
-
+            getDataKeluar();
         }
 
+    }
+
+    private void getDataKeluar() {
+         txtSumber.setVisibility(View.GONE);
+        txtSumber1.setVisibility(View.VISIBLE);
+        txtSupplier.setText(getIntent().getStringExtra("faskes"));
+        mDatabase.child("listDataKeluar").child(getIntent().getStringExtra("idKeluar"))
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int no =1;
+
+                        if (tableLayout.getChildCount()>1){
+                            return;
+                        }
+
+                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                            ListModel l = snapshot1.getValue(ListModel.class);
+                            View view = LayoutInflater.from(DetailActivity.this).inflate(R.layout.list_data_tb,null, false);
+
+                            TextView txtSumber = view.findViewById(R.id.txtSumber);
+                            TextView txtName = view.findViewById(R.id.txtName);
+                            TextView txtNo = view.findViewById(R.id.txtNo);
+                            TextView txtJmlMasuk = view.findViewById(R.id.txtJmlMasuk);
+                            TextView txtTglExp = view.findViewById(R.id.txtTglExp);
+                            txtNo.setText(String.valueOf(no++));
+                            txtTglExp.setText(constant.changeFromLong(l.getTglExp()));
+                            txtJmlMasuk.setText(String.valueOf(l.getJumlah()));
+                            txtName.setText(getNameObat(l.getObatId()));
+                            txtSumber.setVisibility(View.VISIBLE);
+                            txtSumber.setText(String.valueOf(constant.getSumberNameById(l.getSumberId())));
+                            tableLayout.addView(view);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
     private void getDataMasuk() {
