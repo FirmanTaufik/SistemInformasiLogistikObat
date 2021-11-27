@@ -16,7 +16,8 @@
         android:theme="@style/Theme.SistemInformasiLogistikObat"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon">
-        <activity android:name=".Activity.DetailActivity"></activity>
+        <activity android:name=".Activity.ObatDetailActivity"></activity>
+        <activity android:name=".Activity.DetailActivity" />
         <activity android:name=".Activity.KaryawanActivity" />
         <activity android:name=".Activity.SettingActivity" />
         <activity android:name=".Activity.LitsAddOutActivity" />

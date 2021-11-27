@@ -13,8 +13,10 @@ import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -26,25 +28,35 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.rentalapp.sisteminformasilogistikobat.Adapter.ObatAdapter;
+import com.rentalapp.sisteminformasilogistikobat.Model.ListModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.ObatModel;
+import com.rentalapp.sisteminformasilogistikobat.Model.StockObatModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.SupplierModel;
 import com.rentalapp.sisteminformasilogistikobat.R;
+import com.rentalapp.sisteminformasilogistikobat.Util.Constant;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 public class ObatActivity extends AppCompatActivity {
-
+    private String TAG ="ObatActivityTAG";
     private DatabaseReference mDatabase;
     private RecyclerView recyclerView;
     private ObatAdapter obatAdapter;
-    private ArrayList<ObatModel> obatModels;
+//    private ArrayList<ObatModel> obatModels;
+    private ArrayList<StockObatModel> stockObat;
+    private Constant constant;
+    boolean isExp =true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_obat);
+        constant = new Constant(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -59,27 +71,34 @@ public class ObatActivity extends AppCompatActivity {
 
         FirebaseApp.initializeApp(ObatActivity.this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        obatModels = new ArrayList<>();
+       // obatModels = new ArrayList<>();
+        stockObat = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        obatAdapter = new ObatAdapter(this, obatModels);
-        recyclerView.setAdapter(obatAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+     //   recyclerView.setItemViewCacheSize(stockObat.size());
+
+
+       getData();
     }
 
-    @Override
-    protected void onResume() {
+    private void getData() {
+        stockObat.clear();
         mDatabase.child("obatalkes")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        obatModels.clear();
+                        stockObat.clear();
                         for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                             ObatModel obatModel = snapshot1.getValue(ObatModel.class);
                             obatModel.setObatId(snapshot1.getKey());
-                            obatModels.add(obatModel);
+
+//                            stockObat.add(new StockObatModel(obatModel.getObatId(), obatModel.getName(), obatModel.getPack(),
+//                                    0,0 ));
+
+                            getSisaStock(obatModel );
                         }
-                        Collections.reverse(obatModels);
-                        obatAdapter.notifyDataSetChanged();
+                        // Collections.reverse(obatModels);
                     }
 
                     @Override
@@ -87,6 +106,172 @@ public class ObatActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void getSisaStock(ObatModel obatModel) {
+        Query query =  mDatabase.child("listDataMasuk");
+        Query query2 =  mDatabase.child("listDataKeluar");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            int totalMasuk=0;
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    for (DataSnapshot d : dataSnapshot.getChildren()){
+                        Log.d(TAG, "onDataChangemas: "+d.getKey());
+                        ListModel listModel = d.getValue(ListModel.class);
+                        listModel.setListId(d.getKey());
+                        Log.d(TAG, "onDataChange: "+listModel.getJumlah());
+                        if (obatModel.getObatId().equals(
+                                listModel.getObatId())){
+                            totalMasuk = totalMasuk+listModel.getJumlah();
+                        }
+                    }
+
+
+                }
+                // holder.txtMasuk.setText("Total Masuk : "+String.valueOf(totalMasuk));
+                query2.addListenerForSingleValueEvent(new ValueEventListener() {
+                    int totalKeluar=0;
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            for (DataSnapshot d : dataSnapshot.getChildren()){
+                                Log.d(TAG, "onDataChangemas: "+d.getKey());
+                                ListModel listModel = d.getValue(ListModel.class);
+                                listModel.setListId(d.getKey());
+                                Log.d(TAG, "onDataChange: "+listModel.getJumlah());
+                                if (obatModel.getObatId().equals(
+                                        listModel.getObatId())){
+                                    totalKeluar = totalKeluar+listModel.getJumlah();
+                                }
+                            }
+
+
+                        }
+                        //    holder.txtKeluar.setText("Total Keluar : "+String.valueOf(totalKeluar));
+                        int sisa = totalMasuk - totalKeluar;
+
+                        getExp(obatModel,sisa);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+
+
+    private void getExp(ObatModel obatModel, int sisa) {
+        Query query =  mDatabase.child("listDataMasuk");
+        Query query2 =  mDatabase.child("listDataKeluar");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            int totalMasuk=0;
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    for (DataSnapshot d : dataSnapshot.getChildren()){
+                        Log.d(TAG, "onDataChangemas: "+d.getKey());
+                        ListModel listModel = d.getValue(ListModel.class);
+                        listModel.setListId(d.getKey());
+                        Log.d(TAG, "onDataChange: "+listModel.getJumlah());
+                        if (listModel.getTglExp()<=System.currentTimeMillis()){
+                            if (obatModel.getObatId().equals(  listModel.getObatId())){
+                                totalMasuk = totalMasuk+listModel.getJumlah();
+                            }
+                        }
+
+                    }
+
+
+                }
+                // holder.txtMasuk.setText("Total Masuk : "+String.valueOf(totalMasuk));
+                query2.addListenerForSingleValueEvent(new ValueEventListener() {
+                    int totalKeluar=0;
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            for (DataSnapshot d : dataSnapshot.getChildren()){
+                                Log.d(TAG, "onDataChangemas: "+d.getKey());
+                                ListModel listModel = d.getValue(ListModel.class);
+                                listModel.setListId(d.getKey());
+                                Log.d(TAG, "onDataChange: "+listModel.getJumlah());
+                                if (listModel.getTglExp()<=System.currentTimeMillis()){
+                                    if (obatModel.getObatId().equals(
+                                            listModel.getObatId())){
+                                        totalKeluar = totalKeluar+listModel.getJumlah();
+                                    }
+                                }
+
+                            }
+
+
+                        }
+                        //    holder.txtKeluar.setText("Total Keluar : "+String.valueOf(totalKeluar));
+                        int jmlExp = totalMasuk - totalKeluar;
+
+                        stockObat.add(new StockObatModel(obatModel.getObatId(), obatModel.getName(), obatModel.getPack(),
+                                sisa,jmlExp ));
+
+                        sort();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void sort() {
+        ArrayList<StockObatModel> fixArray;
+        if (isExp) {
+            Collections.sort(stockObat, new Comparator<StockObatModel>() {
+                @Override
+                public int compare(StockObatModel o1, StockObatModel o2) {
+                    return Integer.compare(o1.getStockExp(), o2.getStockExp());
+                }
+            });
+             Collections.reverse(stockObat);
+            fixArray = stockObat;
+        }else {
+            Collections.sort(stockObat, new Comparator<StockObatModel>() {
+                @Override
+                public int compare(StockObatModel o1, StockObatModel o2) {
+                    return Integer.compare(o1.getSisaStock(), o2.getSisaStock());
+                }
+            });
+            fixArray =stockObat;
+        }
+
+        obatAdapter = new ObatAdapter(this, fixArray);
+        recyclerView.setAdapter(obatAdapter);
+     //   Collections.sort(stockObat);
+        obatAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+
         super.onResume();
     }
 
@@ -133,12 +318,12 @@ public class ObatActivity extends AppCompatActivity {
         builder.show();
 
     }
-
-
+    Menu prevMenu;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.prevMenu =  menu;
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-        menu.findItem(R.id.filter).setVisible(false);
+        menu.findItem(R.id.filter).setVisible(true).setIcon(R.drawable.ic_baseline_keyboard_double_arrow_down_24);
         menu.findItem(R.id.print).setVisible(false);
         menu.findItem(R.id.add).setVisible(false);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.acion_search));
@@ -161,5 +346,22 @@ public class ObatActivity extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.filter){
+            if (isExp){
+                isExp= false;
+                prevMenu.findItem(R.id.filter).setIcon(R.drawable.  ic_baseline_keyboard_double_arrow_up_24);
+                Toast.makeText(this, "Merubah Sisa Stock Jadi Yang Teratas", Toast.LENGTH_SHORT).show();
+            }else {
+                isExp= true;
+                prevMenu.findItem(R.id.filter).setIcon(R.drawable.ic_baseline_keyboard_double_arrow_down_24);
+                Toast.makeText(this, "Merubah Stock Expired Jadi Yang Teratas", Toast.LENGTH_SHORT).show();
+            }
+            sort();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
