@@ -49,8 +49,9 @@ import jrizani.jrspinner.JRSpinner;
 
 public class MasukAdapter extends RecyclerView.Adapter<MasukAdapter.ViewHolder>implements Filterable {
     private Context context;
+    private ArrayList<MasukModel> listIntent;
     private List<MasukModel> masukModels;
-    private List<MasukModel> dataListfull = new ArrayList<>();
+    private List<MasukModel> dataListfull;
     private ArrayList<ObatModel> obatModels;
     private ArrayList<SupplierModel> supplierModels;
     private DatabaseReference mDatabase;
@@ -61,6 +62,7 @@ public class MasukAdapter extends RecyclerView.Adapter<MasukAdapter.ViewHolder>i
         this.context = context;
         this.masukModels = masukModels;
         this.dataListfull = masukModels;
+        this.listIntent = masukModels;
         this.obatModels =obatModels;
         this.supplierModels =supplierModels;
     }
@@ -88,6 +90,8 @@ public class MasukAdapter extends RecyclerView.Adapter<MasukAdapter.ViewHolder>i
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra("isMasuk", true);
+                intent.putExtra("position", position  );
+                intent.putParcelableArrayListExtra("listMasuk", listIntent  );
                 intent.putExtra("supplier", "Supplier : "+getSupplierName(masukModels.get(position).getSupplierId()));
                 intent.putExtra("sumberDana","Sumber Dana : "+constant.getSumberNameById(masukModels.get(position).getSumberId()) );
                 intent.putExtra("tanggal",holder.txtTglMasuk.getText().toString().trim());

@@ -52,6 +52,7 @@ import jrizani.jrspinner.JRSpinner;
 public class KeluarAdapter extends RecyclerView.Adapter<KeluarAdapter.ViewHolder>implements Filterable {
     private String TAG ="TAGKeluarAdapter";
     private Context context;
+    private ArrayList<KeluarModel> listIntent;
     private List<KeluarModel> keluarModels;
     private List<KeluarModel> dataListfull = new ArrayList<>();
     private ArrayList<ObatModel> obatModels;
@@ -63,6 +64,7 @@ public class KeluarAdapter extends RecyclerView.Adapter<KeluarAdapter.ViewHolder
         this.context = context;
         this.keluarModels = keluarModels;
         this.dataListfull = keluarModels;
+        this.listIntent = keluarModels;
         this.obatModels =obatModels;
     }
 
@@ -88,6 +90,8 @@ public class KeluarAdapter extends RecyclerView.Adapter<KeluarAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailActivity.class);
+                intent.putParcelableArrayListExtra("listKeluar", listIntent);
+                intent.putExtra("position", position  );
                 intent.putExtra("faskes","Faskes : "+getFaskesName(keluarModels.get(position).getFaskesId()) );
                 intent.putExtra("idKeluar",keluarModels.get(position).getKeluarId() );
                 intent.putExtra("tanggal",holder.txtTglMasuk.getText().toString().trim());
@@ -201,7 +205,6 @@ public class KeluarAdapter extends RecyclerView.Adapter<KeluarAdapter.ViewHolder
         Intent intent = new Intent(context, LitsAddOutActivity.class);
         intent.putExtra("obatModels",obatModels);
         intent.putExtra("keluarId", keluarModels.get(position).getKeluarId());
-      //  intent.putExtra("sumberId", keluarModels.get(position).getSumberId());
         intent.putExtra("faskesId", keluarModels.get(position).getFaskesId());
         intent.putExtra("tanggal", keluarModels.get(position).getTglKeluar());
         intent.putExtra("isIn", false);
