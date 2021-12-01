@@ -1,6 +1,9 @@
 package com.rentalapp.sisteminformasilogistikobat.Model;
 
-public class KeluarModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class KeluarModel implements Parcelable {
     private long tglKeluar;
     private String keluarId=null;
     private int faskesId;
@@ -13,6 +16,24 @@ public class KeluarModel {
         this.keluarId = keluarId;
         this.faskesId = faskesId;
     }
+
+    protected KeluarModel(Parcel in) {
+        tglKeluar = in.readLong();
+        keluarId = in.readString();
+        faskesId = in.readInt();
+    }
+
+    public static final Creator<KeluarModel> CREATOR = new Creator<KeluarModel>() {
+        @Override
+        public KeluarModel createFromParcel(Parcel in) {
+            return new KeluarModel(in);
+        }
+
+        @Override
+        public KeluarModel[] newArray(int size) {
+            return new KeluarModel[size];
+        }
+    };
 
     public long getTglKeluar() {
         return tglKeluar;
@@ -36,5 +57,17 @@ public class KeluarModel {
 
     public void setFaskesId(int faskesId) {
         this.faskesId = faskesId;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(tglKeluar);
+        dest.writeString(keluarId);
+        dest.writeInt(faskesId);
     }
 }
