@@ -3,9 +3,11 @@ package com.rentalapp.sisteminformasilogistikobat.Adapter;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -20,12 +22,18 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.rentalapp.sisteminformasilogistikobat.Activity.LitsAddOutActivity;
+import com.rentalapp.sisteminformasilogistikobat.Model.KeluarModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.ListModel;
+import com.rentalapp.sisteminformasilogistikobat.Model.MasukModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.ObatModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.UserModel;
 import com.rentalapp.sisteminformasilogistikobat.R;
@@ -149,8 +157,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Edit");
         builder.setView(view1);
+        TextInputLayout txtInputJml = view1.findViewById(R.id.txtInputJml);
+        TextInputLayout txtInputSisa = view1.findViewById(R.id.txtInputSisa);
         TextInputLayout textInputLayout = view1.findViewById(R.id.textInputLayout);
         JRSpinner spinner = view1.findViewById(R.id.spinner);
+        TextInputEditText edtSisa =  view1.findViewById(R.id.edtSisa);
         TextInputEditText edtTglExp =  view1.findViewById(R.id.edtTglExp);
         TextInputEditText edtJmlMasuk = view1.findViewById(R.id.edtJmlMasuk);
         JRSpinner spinnerObat = view1.findViewById(R.id.spinnerObat);
@@ -158,6 +169,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         edtJmlMasuk.setText(String.valueOf(listModel.getJumlah()));
 
         if (!isIn){
+            getSisaStock(listModel.getObatId(), edtSisa);
+            txtInputJml.setHint("Jumlah Keluar");
+            txtInputSisa.setVisibility(View.VISIBLE);
             textInputLayout.setVisibility(View.VISIBLE);
             edtTglExp.setEnabled(false);
             spinner.setItems(constant.getSumberDanaNama(false));
@@ -199,23 +213,154 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             }
         });
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("ok", null);
+        builder.setNegativeButton("cancel", null);
+        final AlertDialog mAlertDialog = builder.create();
+        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                listModel.setJumlah(Integer.valueOf(edtJmlMasuk.getText().toString().trim()));
-                listModels.set(position,listModel);
-                notifyDataSetChanged();
+            public void onShow(DialogInterface dialog) {
+                Button b = mAlertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int sisa = Integer.valueOf(edtSisa.getText().toString());
+                        int jml = Integer.valueOf(edtJmlMasuk.getText().toString());
+
+                        if (jml>sisa){
+                            Toast.makeText(context,"Jumlah Keluar Terlalu Banyak", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        listModel.setJumlah(Integer.valueOf(edtJmlMasuk.getText().toString().trim()));
+                        listModels.set(position,listModel);
+                        notifyDataSetChanged();
+                        mAlertDialog.dismiss();
+                    }
+                });
             }
         });
+        mAlertDialog.show();
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                int sisa = Integer.valueOf(edtSisa.getText().toString());
+//                int jml = Integer.valueOf(edtJmlMasuk.getText().toString());
+//
+//                if (jml>sisa){
+//                    Toast.makeText(context,"Jumlah Keluar Terlalu Banyak", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                listModel.setJumlah(Integer.valueOf(edtJmlMasuk.getText().toString().trim()));
+//                listModels.set(position,listModel);
+//                notifyDataSetChanged();
+//            }
+//        });
+//
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+//
+//        builder.show();
+
+    }
+
+    private void getSisaStock(String obatId, TextInputEditText edtSisa) {
+        Query query =  mDatabase.child("listKeluar")
+                .orderByChild("tglKeluar")
+                .startAt(0)
+                .endAt(System.currentTimeMillis());
+
+        Query query1 =  mDatabase.child("listMasuk")
+                .orderByChild("tglMasuk")
+                .startAt(0)
+                .endAt(System.currentTimeMillis());
+//        ArrayList <ObatModel> obatModels = getIntent().getParcelableArrayListExtra("obatModels");
+//        for (int i = 0; i <obatModels.size() ; i++) {
+//            String obatId = obatModels.get(i).getObatId();
+        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+            int totalMasuk=0;
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    MasukModel masukModel = dataSnapshot.getValue(MasukModel.class);
+                    masukModel.setMasukId(dataSnapshot.getKey());
+
+                    mDatabase.child("listDataMasuk").child(dataSnapshot.getKey())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot s) {
+                                    for (DataSnapshot d : s.getChildren()){
+                                        ListModel listModel = d.getValue(ListModel.class);
+                                        listModel.setListId(d.getKey());
+                                        if (obatId.equals(listModel.getObatId())){
+                                            totalMasuk = totalMasuk+listModel.getJumlah();
+                                        }
+                                    }
+                                    //txtMasuk.setText( String.valueOf(totalMasuk));
+
+                                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        int totalKeluar=0;
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                                KeluarModel keluarModel = dataSnapshot.getValue(KeluarModel.class);
+                                                keluarModel.setKeluarId(dataSnapshot.getKey());
+                                                mDatabase.child("listDataKeluar").child(dataSnapshot.getKey())
+                                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(@NonNull DataSnapshot s) {
+                                                                for (DataSnapshot d : s.getChildren()){
+                                                                    ListModel listModel = d.getValue(ListModel.class);
+                                                                    listModel.setListId(d.getKey());
+
+                                                                    if (obatId.equals(  listModel.getObatId())){
+                                                                        totalKeluar = totalKeluar+listModel.getJumlah();
+                                                                    }
+
+                                                                }
+                                                                int m = totalMasuk - totalKeluar;
+                                                                edtSisa.setEnabled(false);
+                                                                edtSisa.setText(String.valueOf(m));
+                                                                //  sisaStockModels.add(new SisaStockModel(totalMasuk, totalKeluar));
+                                                            }
+
+                                                            @Override
+                                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                                            }
+                                                        });
+
+
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
+        //    }
 
-        builder.show();
 
     }
 

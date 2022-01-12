@@ -47,10 +47,12 @@ public class LoginActivity extends AppCompatActivity {
         pDialog.show();
         if (edtUsername.getText().length()==0
                 || edtPassword.getText().length()==0) {
+            pDialog.dismissWithAnimation();
             Toast.makeText(this, "username atau password masih kosong", Toast.LENGTH_SHORT).show();
             return;
         }
         mDatabase.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
+            int countFind=0;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -61,18 +63,20 @@ public class LoginActivity extends AppCompatActivity {
                         constant.setUserId(LoginActivity.this,u.getUsername() );
                         constant.setLevel(LoginActivity.this,u.getLevel());
                          startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        countFind= countFind+1;
                         return;
-                    }else {
-                        Toast.makeText(LoginActivity.this, "username atau password salah", Toast.LENGTH_SHORT).show();
                     }
-
                 }
 
+                if (countFind==0){
+                    Toast.makeText(LoginActivity.this, "username atau password salah", Toast.LENGTH_SHORT).show();
+                }
                 pDialog.dismissWithAnimation();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                pDialog.dismissWithAnimation();
 
             }
         });

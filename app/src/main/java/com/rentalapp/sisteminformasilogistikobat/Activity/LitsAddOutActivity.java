@@ -14,6 +14,7 @@ import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,13 +33,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.rentalapp.sisteminformasilogistikobat.Adapter.ListAdapter;
 import com.rentalapp.sisteminformasilogistikobat.Adapter.MasukAdapter;
 import com.rentalapp.sisteminformasilogistikobat.Model.KeluarModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.ListModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.MasukModel;
+import com.rentalapp.sisteminformasilogistikobat.Model.MutasiModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.ObatModel;
+import com.rentalapp.sisteminformasilogistikobat.Model.SisaStockModel;
 import com.rentalapp.sisteminformasilogistikobat.R;
 import com.rentalapp.sisteminformasilogistikobat.Util.Constant;
 
@@ -64,6 +68,7 @@ public class LitsAddOutActivity extends AppCompatActivity {
     private long tanggal=0;
     private int faskesId=0;
     private Toolbar toolbar;
+    private ArrayList <SisaStockModel> sisaStockModels;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +121,110 @@ public class LitsAddOutActivity extends AppCompatActivity {
             setKeluarUi();
         }
     }
+
+    private void getSisaStock(String obatId, TextInputEditText edtSisa) {
+        sisaStockModels= new ArrayList<>();
+        Query query =  mDatabase.child("listKeluar")
+                .orderByChild("tglKeluar")
+                .startAt(0)
+                .endAt(System.currentTimeMillis());
+
+        Query query1 =  mDatabase.child("listMasuk")
+                .orderByChild("tglMasuk")
+                .startAt(0)
+                .endAt(System.currentTimeMillis());
+//        ArrayList <ObatModel> obatModels = getIntent().getParcelableArrayListExtra("obatModels");
+//        for (int i = 0; i <obatModels.size() ; i++) {
+//            String obatId = obatModels.get(i).getObatId();
+            query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                int totalMasuk=0;
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        MasukModel masukModel = dataSnapshot.getValue(MasukModel.class);
+                        masukModel.setMasukId(dataSnapshot.getKey());
+
+                        mDatabase.child("listDataMasuk").child(dataSnapshot.getKey())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot s) {
+                                        for (DataSnapshot d : s.getChildren()){
+                                            Log.d(TAG, "onDataChange: "+dataSnapshot.getKey());
+                                            ListModel listModel = d.getValue(ListModel.class);
+                                            listModel.setListId(d.getKey());
+                                            Log.d(TAG, "onDataChange: "+listModel.getJumlah());
+                                            if (obatId.equals(listModel.getObatId())){
+                                                totalMasuk = totalMasuk+listModel.getJumlah();
+                                            }
+                                        }
+                                        //txtMasuk.setText( String.valueOf(totalMasuk));
+
+                                        query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            int totalKeluar=0;
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                                    KeluarModel keluarModel = dataSnapshot.getValue(KeluarModel.class);
+                                                    keluarModel.setKeluarId(dataSnapshot.getKey());
+                                                    mDatabase.child("listDataKeluar").child(dataSnapshot.getKey())
+                                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot s) {
+                                                                    for (DataSnapshot d : s.getChildren()){
+                                                                        Log.d(TAG, "onDataChange: "+dataSnapshot.getKey());
+                                                                        ListModel listModel = d.getValue(ListModel.class);
+                                                                        listModel.setListId(d.getKey());
+                                                                        Log.d(TAG, "onDataChange: "+listModel.getJumlah());
+
+                                                                        if (obatId.equals(  listModel.getObatId())){
+                                                                            totalKeluar = totalKeluar+listModel.getJumlah();
+                                                                        }
+
+                                                                    }
+                                                                    int m = totalMasuk - totalKeluar;
+                                                                    edtSisa.setEnabled(false);
+                                                                    edtSisa.setText(String.valueOf(m));
+                                                                    Log.d(TAG, "sisastock: "+m);
+                                                                  //  sisaStockModels.add(new SisaStockModel(totalMasuk, totalKeluar));
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                }
+                                                            });
+
+
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+    //    }
+
+
+    }
+
 
     private void setKeluarUi() {
         toolbar.setTitle("Tambah Obat/Alkes Keluar");
@@ -180,6 +289,11 @@ public class LitsAddOutActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Tambah");
         builder.setView(view1);
+        TextInputLayout txtInputJml = view1.findViewById(R.id.txtInputJml);
+        txtInputJml.setHint("Jumlah Keluar");
+        TextInputLayout txtInputSisa = view1.findViewById(R.id.txtInputSisa);
+        txtInputSisa.setVisibility(View.VISIBLE);
+        TextInputEditText edtSisa = view1.findViewById(R.id.edtSisa);
         TextInputLayout textInputLayout = view1.findViewById(R.id.textInputLayout);
         textInputLayout.setVisibility(View.VISIBLE);
         TextInputEditText edtTglExp =  view1.findViewById(R.id.edtTglExp);
@@ -228,6 +342,7 @@ public class LitsAddOutActivity extends AppCompatActivity {
         spinnerObat.setOnItemClickListener(new JRSpinner.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                getSisaStock(constant.getObatId(position),edtSisa);
                 listModel.setObatId(constant.getObatId(position));
                 edtTglExp.setText(constant.changeFromLong(Long.valueOf(constant.getObatPack(position))));
                 listModel.setTglExp(Long.valueOf(constant.getObatPack(position)));
@@ -243,6 +358,14 @@ public class LitsAddOutActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         if (edtJmlMasuk.getText().length()==0) {
                             Toast.makeText(LitsAddOutActivity.this,"Jumlah Masih Kosong", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        int sisa = Integer.valueOf(edtSisa.getText().toString());
+                        int jml = Integer.valueOf(edtJmlMasuk.getText().toString());
+
+                        if (jml>sisa){
+                            Toast.makeText(LitsAddOutActivity.this,"Jumlah Keluar Terlalu Banyak", Toast.LENGTH_SHORT).show();
                             return;
                         }
                             listModel.setSumberId(sumberId);
@@ -277,6 +400,7 @@ public class LitsAddOutActivity extends AppCompatActivity {
                                 constant.setListObatAlkes(sortBySumberId);
                                 spinnerObat.setItems(constant.getObatNama());
                             }
+
 
                         }
 
