@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+    <TextView
+        android:id="@+id/txtNo"
+        android:background="@drawable/textview_border"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:text="No"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/txtName"
+        android:background="@drawable/textview_border"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:text="Nama Obat/Alkes"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/txtJmlMasuk"
+        android:background="@drawable/textview_border"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:text="Jumlah Masuk"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/txtJmlKeluar"
+        android:gravity="center"
+        android:background="@drawable/textview_border"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:text="Jumlah Keluar"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/txtSisaExp"
+        android:gravity="center"
+        android:background="@drawable/textview_border"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:text="Stock Expired"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/txtSisaStock"
+        android:gravity="center"
+        android:background="@drawable/textview_border"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:text="Sisa Stock"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+</TableRow>

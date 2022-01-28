@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TextView
+        android:background="@drawable/textview_border"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:text="No"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:background="@drawable/textview_border"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:text="Distributor/Penyedia"
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+
+
+    <!--                    TODO-->
+    <TableLayout>
+        <TableRow
+            android:background="@drawable/textview_border"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_span="4"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:text="RINCIAN KONTRAK"
+                android:textColor="@android:color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </TableRow>
+
+        <TableRow
+            android:background="@drawable/textview_border" >
+
+            <TextView
+                android:background="@drawable/textview_border"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:text="No"
+                android:textColor="@android:color/black"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:background="@drawable/textview_border"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:text="Nama Obat/Alkes"
+                android:textColor="@android:color/black"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:background="@drawable/textview_border"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:text="Satuan"
+                android:textColor="@android:color/black"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:background="@drawable/textview_border"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:text="Jumlah Obat"
+                android:textColor="@android:color/black"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"/>
+        </TableRow>
+    </TableLayout>
+
+</TableRow>
