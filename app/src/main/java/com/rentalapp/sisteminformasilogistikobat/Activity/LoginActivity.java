@@ -48,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
         if (edtUsername.getText().length()==0
                 || edtPassword.getText().length()==0) {
             pDialog.dismissWithAnimation();
+            edtUsername.setError("Username tidak boleh kosong");
+            edtPassword.setError("Password tidak boleh kosong");
             Toast.makeText(this, "username atau password masih kosong", Toast.LENGTH_SHORT).show();
             return;
         }

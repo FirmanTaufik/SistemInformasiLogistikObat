@@ -79,8 +79,7 @@
 
                 <TextView
                     style="@style/TextAppearance.AppCompat.SearchResult.Title"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"                    android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:text="About App"
                     android:layout_width="match_parent"

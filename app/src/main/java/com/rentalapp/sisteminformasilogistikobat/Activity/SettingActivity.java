@@ -75,6 +75,7 @@ public class SettingActivity extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
         mDatabase.child("user").addListenerForSingleValueEvent(new ValueEventListener() {
+            int countFind=0;
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -84,14 +85,15 @@ public class SettingActivity extends AppCompatActivity {
                             u.getPassword().equals(password)) {
                         startActivity(new Intent(SettingActivity.this, UserActivity.class));
 
+                        countFind= countFind+1;
                         pDialog.dismissWithAnimation();
                         return;
-                    }else {
-                        Toast.makeText(SettingActivity.this, "password salah", Toast.LENGTH_SHORT).show();
                     }
 
                 }
-
+                if (countFind==0){
+                    Toast.makeText(SettingActivity.this, "password salah", Toast.LENGTH_SHORT).show();
+                }
                 pDialog.dismissWithAnimation();
             }
 

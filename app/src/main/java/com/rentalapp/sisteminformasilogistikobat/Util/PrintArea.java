@@ -223,6 +223,7 @@ public class PrintArea {
         }
         return null;
     }
+
     private String getNamaBag(){
         for (int i =0; i<karyawanModels.size();i++){
             if (karyawanModels.get(i).getJabatan()==2){
@@ -231,6 +232,7 @@ public class PrintArea {
         }
         return null;
     }
+
     private String getNamaKepUptd(){
         for (int i =0; i<karyawanModels.size();i++){
             if (karyawanModels.get(i).getJabatan()==1){
@@ -249,39 +251,6 @@ public class PrintArea {
         return null;
     }
 
-
-    void printMutasi(WebView webView){
-        try {
-            // PrintManager
-            String PRINT_SERVICE = (String) Context.class.getDeclaredField(
-                    "PRINT_SERVICE").get(null);
-            Object printManager = context.getSystemService(PRINT_SERVICE);
-
-            // PrintDocumentAdapter
-            Class<?> printDocumentAdapterClass = Class.forName("android.print.PrintDocumentAdapter");
-            Method createPrintDocumentAdapterMethod = webView.getClass()
-                    .getMethod("createPrintDocumentAdapter");
-            Object printAdapter = createPrintDocumentAdapterMethod
-                    .invoke(webView);
-
-            // PrintAttributes
-            Class<?> printAttributesBuilderClass = Class
-                    .forName("android.print.PrintAttributes$Builder");
-            Constructor<?> ctor = printAttributesBuilderClass.getConstructor();
-            Object printAttributes = ctor.newInstance(new Object[] {});
-            Method buildMethod = printAttributes.getClass().getMethod("build");
-            Object printAttributesBuild = buildMethod.invoke(printAttributes);
-            // PrintJob
-            String jobName = "My Document";
-            Method printMethod = printManager.getClass().getMethod("print",
-                    String.class, printDocumentAdapterClass,
-                    printAttributesBuild.getClass());
-            Object printJob = printMethod.invoke(printManager, jobName,
-                    printAdapter, printAttributesBuild);
-        } catch (Exception e) {
-
-        }
-    }
 
 
     private void createWebPrintJob(WebView webView) {

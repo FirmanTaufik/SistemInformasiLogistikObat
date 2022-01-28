@@ -9,15 +9,20 @@ import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DatePickerDialog;
 import android.app.SearchManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,17 +36,23 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.rentalapp.sisteminformasilogistikobat.Adapter.ObatAdapter;
+import com.rentalapp.sisteminformasilogistikobat.Model.KaryawanModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.ListModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.ObatModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.StockObatModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.SupplierModel;
 import com.rentalapp.sisteminformasilogistikobat.R;
 import com.rentalapp.sisteminformasilogistikobat.Util.Constant;
+import com.rentalapp.sisteminformasilogistikobat.Util.PrintObat;
+import com.rentalapp.sisteminformasilogistikobat.Util.SortingData;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+
+import jrizani.jrspinner.JRSpinner;
 
 public class ObatActivity extends AppCompatActivity {
     private String TAG ="ObatActivityTAG";
@@ -52,11 +63,18 @@ public class ObatActivity extends AppCompatActivity {
     private ArrayList<StockObatModel> stockObat;
     private Constant constant;
     boolean isExp =true;
+    PrintObat printObat;
+    private ArrayList<KaryawanModel> karyawanModels;
+    private long endDate =System.currentTimeMillis();
+    private long startDate = 0;
+    private int sumberId=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_obat);
+        karyawanModels = new ArrayList<>();
         constant = new Constant(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -79,9 +97,33 @@ public class ObatActivity extends AppCompatActivity {
      //   recyclerView.setItemViewCacheSize(stockObat.size());
 
 
-       getData();
+        printObat= new PrintObat(ObatActivity.this,
+                getIntent().getParcelableArrayListExtra("obatModels"),
+                mDatabase, startDate, endDate,karyawanModels, sumberId);
+
+        getData();
+        getKaryawan();
     }
 
+    private void getKaryawan() {
+        mDatabase.child("karyawan")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        karyawanModels.clear();
+                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                            KaryawanModel karyawanModel = snapshot1.getValue(KaryawanModel.class);
+                            karyawanModel.setKaryawanId(snapshot1.getKey());
+                            karyawanModels.add(karyawanModel);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
     private void getData() {
         stockObat.clear();
         mDatabase.child("obatalkes")
@@ -181,7 +223,6 @@ public class ObatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     for (DataSnapshot d : dataSnapshot.getChildren()){
-                        Log.d(TAG, "onDataChangemas: "+d.getKey());
                         ListModel listModel = d.getValue(ListModel.class);
                         listModel.setListId(d.getKey());
                         Log.d(TAG, "onDataChange: "+listModel.getJumlah());
@@ -220,7 +261,6 @@ public class ObatActivity extends AppCompatActivity {
                         }
                         //    holder.txtKeluar.setText("Total Keluar : "+String.valueOf(totalKeluar));
                         int jmlExp = totalMasuk - totalKeluar;
-
                         stockObat.add(new StockObatModel(obatModel.getObatId(), obatModel.getName(), obatModel.getPack(),
                                 sisa,jmlExp ));
 
@@ -324,7 +364,7 @@ public class ObatActivity extends AppCompatActivity {
         this.prevMenu =  menu;
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         menu.findItem(R.id.filter).setVisible(true).setIcon(R.drawable.ic_baseline_keyboard_double_arrow_down_24);
-        menu.findItem(R.id.print).setVisible(false);
+        menu.findItem(R.id.print).setVisible(true).setIcon(R.drawable.ic_baseline_list_alt_24);
         menu.findItem(R.id.add).setVisible(false);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.acion_search));
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
@@ -361,6 +401,14 @@ public class ObatActivity extends AppCompatActivity {
                 Toast.makeText(this, "Merubah Stock Expired Jadi Yang Teratas", Toast.LENGTH_SHORT).show();
             }
             sort();
+        }
+
+        if (item.getItemId()==R.id.print){
+
+            Intent intent = new Intent(ObatActivity.this, MutasiActivity.class);
+            intent.putExtra("isObat", true);
+            intent.putParcelableArrayListExtra("obatModels",getIntent().getParcelableArrayListExtra("obatModels"));
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

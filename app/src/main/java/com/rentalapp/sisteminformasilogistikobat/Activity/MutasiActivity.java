@@ -51,6 +51,8 @@ import com.rentalapp.sisteminformasilogistikobat.Model.SupplierModel;
 import com.rentalapp.sisteminformasilogistikobat.R;
 import com.rentalapp.sisteminformasilogistikobat.Util.Constant;
 import com.rentalapp.sisteminformasilogistikobat.Util.PrintArea;
+import com.rentalapp.sisteminformasilogistikobat.Util.PrintObat;
+import com.rentalapp.sisteminformasilogistikobat.Util.PrintSupplier;
 import com.rentalapp.sisteminformasilogistikobat.Util.SortingData;
 
 import java.io.File;
@@ -72,15 +74,13 @@ public class MutasiActivity extends AppCompatActivity {
     private String TAG ="MutasiActivityTAG";
     private Toolbar toolbar;
     private Constant constant;
-    private RecyclerView recyclerView;
     private ArrayList<MutasiModel> mutasiModels;
-    private MutasiAdapter mutasiAdapter;
     private SortingData sortingData;
     private DatabaseReference mDatabase;
     private TableLayout tableLayout;
-    private int PERMISSION_REQUEST = 0;
-    private boolean allowSave = true;
     private ArrayList<KaryawanModel> karyawanModels;
+    private PrintObat printObat;
+    private PrintSupplier printSupplier;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,21 +90,31 @@ public class MutasiActivity extends AppCompatActivity {
         constant = new Constant(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
-        sortingData = new SortingData(this, getIntent().getParcelableArrayListExtra("obatModels"), mDatabase,startDate,
-                        endDate, sumberId);
         tableLayout = findViewById(R.id.tableLayout);
-        sortingData.setLayout(tableLayout);
-        mutasiModels = sortingData.getMutasiList();
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if (getIntent().hasExtra("isMutasi")){
+
+            sortingData = new SortingData(this, getIntent().getParcelableArrayListExtra("obatModels"), mDatabase,startDate,
+                    endDate, sumberId);
+            View view  = LayoutInflater.from(MutasiActivity.this).inflate(R.layout.list_mutasi_header, null,false);
+            tableLayout.addView(view);
+            sortingData.setLayout(tableLayout);
+            mutasiModels = sortingData.getMutasiList();
+
+        }else if (getIntent().hasExtra("isObat")){
+            toolbar.setTitle("Laporan Obat");
+            printObat = new PrintObat(this,getIntent().getParcelableArrayListExtra("obatModels"), mDatabase,
+                    startDate, endDate, karyawanModels, sumberId);
+            View view  = LayoutInflater.from(MutasiActivity.this).inflate(R.layout.list_obat_header, null,false);
+            tableLayout.addView(view);
+            printObat.setLayout(tableLayout);
+        }else {
+            toolbar.setTitle("Laporan Supplier");
+            printSupplier =new PrintSupplier(MutasiActivity.this,mDatabase,startDate,endDate,karyawanModels,
+                    getIntent().getParcelableArrayListExtra("obatModels"),
+                    getIntent().getParcelableArrayListExtra("supplierModels"), sumberId);
+            printSupplier.getMasuk(tableLayout);
+          //  printSupplier.setLayout(tableLayout);
+        }
 //        mutasiAdapter = new MutasiAdapter(this, mutasiModels,0,System.currentTimeMillis(),0);
 //        recyclerView.setAdapter(mutasiAdapter);
         getKaryawan();
@@ -135,23 +145,6 @@ public class MutasiActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         menu.findItem(R.id.acion_search).setVisible(false);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.acion_search));
-        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setQueryHint("Nama Obat/Alkes");
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
         return true;
     }
 
@@ -160,7 +153,7 @@ public class MutasiActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.filter){
             View view1 = LayoutInflater.from(this).inflate(R.layout.form_filter_mutasi,null  );
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Filter Mutasi");
+            builder.setTitle("Filter");
             builder.setView(view1);
             JRSpinner spinnerSumber = view1.findViewById(R.id.spinnerSumber);
             TextInputEditText edtStart = view1.findViewById(R.id.edtStart);
@@ -217,26 +210,34 @@ public class MutasiActivity extends AppCompatActivity {
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    if (getIntent().hasExtra("isMutasi")){
+                        sortingData = new SortingData(MutasiActivity.this,
+                                getIntent().getParcelableArrayListExtra("obatModels"), mDatabase,startDate,
+                                endDate, sumberId);
+                        tableLayout = findViewById(R.id.tableLayout);
+                        tableLayout.removeAllViews();
+                        View view  = LayoutInflater.from(MutasiActivity.this).inflate(R.layout.list_mutasi_header, null,false);
+                        tableLayout.addView(view);
+                        sortingData.setLayout(tableLayout);
+                    }else if (getIntent().hasExtra("isObat")){
+                        printObat = new PrintObat(MutasiActivity.this,
+                                getIntent().getParcelableArrayListExtra("obatModels"),
+                                mDatabase,  startDate, endDate, karyawanModels, sumberId);
+                        View view  = LayoutInflater.from(MutasiActivity.this).inflate(R.layout.list_obat_header, null,false);
+                        tableLayout.removeAllViews();
+                        tableLayout.addView(view);
+                        printObat.setLayout(tableLayout);
 
-                    sortingData = new SortingData(MutasiActivity.this,
-                            getIntent().getParcelableArrayListExtra("obatModels"), mDatabase,startDate,
-                            endDate, sumberId);
-                    tableLayout = findViewById(R.id.tableLayout);
-                    tableLayout.removeAllViews();
-                    View view  = LayoutInflater.from(MutasiActivity.this).inflate(R.layout.list_mutasi_header, null,false);
-                    tableLayout.addView(view);
-                    sortingData.setLayout(tableLayout);
-
-
+                    }else {
+                        printSupplier =new PrintSupplier(MutasiActivity.this,mDatabase,startDate,endDate,karyawanModels,
+                                getIntent().getParcelableArrayListExtra("obatModels"),
+                                getIntent().getParcelableArrayListExtra("supplierModels"), sumberId);
+                        printSupplier.getMasuk(tableLayout);
+                    }
                     String sorting =  edtStart.getText().toString().trim() +" / "+
                             edtEnd.getText().toString().trim() ;
                     toolbar.setSubtitle(sorting);
                     toolbar.setTitle(constant.getSumberNameById(sumberId));
-
-//                    mutasiAdapter = new MutasiAdapter(MutasiActivity.this, mutasiModels,
-//                            startDate, endDate,sumberId);
-//                    recyclerView.setAdapter(mutasiAdapter);
-//                    mutasiAdapter.notifyDataSetChanged();
                 }
             });
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -249,8 +250,16 @@ public class MutasiActivity extends AppCompatActivity {
             builder.show();
         }else  if (item.getItemId() == R.id.print){
             if (karyawanModels.size()!=0){
-                new PrintArea(MutasiActivity.this, sortingData.getMutasiList(),
-                        sumberId, startDate, endDate,karyawanModels);
+                if (getIntent().hasExtra("isMutasi")){
+                    new PrintArea(MutasiActivity.this, sortingData.getMutasiList(),
+                            sumberId, startDate, endDate,karyawanModels);
+                }else if (getIntent().hasExtra("isObat")){
+                    //TODO
+                    printObat.createPrint();
+                }else {
+                    printSupplier.createWebPrintJob();
+                }
+
             }
 
           // move();

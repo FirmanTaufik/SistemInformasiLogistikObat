@@ -134,11 +134,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toSupplier(View view) {
-        startActivity(new Intent(this, SupplierActivity.class));
+        Intent intent =new Intent(this, SupplierActivity.class);
+        intent.putParcelableArrayListExtra("obatModels",obatModels);
+        startActivity(intent);
     }
 
     public void toObatAlkes(View view) {
-        startActivity(new Intent(this, ObatActivity.class));
+        Intent intent =new Intent(this, ObatActivity.class);
+        intent.putParcelableArrayListExtra("obatModels",obatModels);
+        startActivity(intent);
     }
 
     public void toStockMasuk(View view) {
@@ -210,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
     public void toMutasi(View view) {
         Intent intent = new Intent(MainActivity.this, MutasiActivity.class);
         intent.putParcelableArrayListExtra("obatModels",obatModels);
+        intent.putExtra("isMutasi", true);
         startActivity(intent);
     }
 
