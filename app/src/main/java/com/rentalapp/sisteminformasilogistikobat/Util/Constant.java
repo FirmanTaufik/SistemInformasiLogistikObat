@@ -111,6 +111,7 @@ public class Constant {
         sumberDanaModels.add(new SumberDanaModel(2, "APBD II"));
         sumberDanaModels.add(new SumberDanaModel(3, "PROGRAM"));
         sumberDanaModels.add(new SumberDanaModel(4, "DAK"));
+        sumberDanaModels.add(new SumberDanaModel(5, "Dan Lain-Lain"));
         return sumberDanaModels;
     }
 

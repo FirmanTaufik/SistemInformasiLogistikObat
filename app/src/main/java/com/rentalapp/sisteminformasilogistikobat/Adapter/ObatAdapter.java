@@ -1,5 +1,6 @@
 package com.rentalapp.sisteminformasilogistikobat.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -100,7 +101,7 @@ public class ObatAdapter extends RecyclerView.Adapter<ObatAdapter.ViewHolder>imp
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ObatAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ObatAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         constant = new Constant(context);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         holder.txtName.setText(obatModels.get(position).getName());
@@ -112,6 +113,7 @@ public class ObatAdapter extends RecyclerView.Adapter<ObatAdapter.ViewHolder>imp
                 intent.putExtra("obatId",obatModels.get(position).getObatId() );
                 intent.putExtra("kemasan","Kemasan : "+obatModels.get(position).getPack() );
                 intent.putExtra("name", obatModels.get(position).getName() );
+                intent.putExtra("batch", obatModels.get(position).getNoBatch());
                 context.startActivity(intent);
             }
         });
@@ -186,138 +188,6 @@ public class ObatAdapter extends RecyclerView.Adapter<ObatAdapter.ViewHolder>imp
     public int getItemViewType(int position) {
         return position;
     }
-    private void getExp(ObatAdapter.ViewHolder holder, int position) {
-        Query query =  mDatabase.child("listDataMasuk");
-        Query query2 =  mDatabase.child("listDataKeluar");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            int totalMasuk=0;
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    for (DataSnapshot d : dataSnapshot.getChildren()){
-                        Log.d(TAG, "onDataChangemas: "+d.getKey());
-                        ListModel listModel = d.getValue(ListModel.class);
-                        listModel.setListId(d.getKey());
-                        Log.d(TAG, "onDataChange: "+listModel.getJumlah());
-                        if (listModel.getTglExp()<=System.currentTimeMillis()){
-                            if (obatModels.get(position).getObatId().equals(  listModel.getObatId())){
-                                totalMasuk = totalMasuk+listModel.getJumlah();
-                            }
-                        }
-
-                    }
-
-
-                }
-                // holder.txtMasuk.setText("Total Masuk : "+String.valueOf(totalMasuk));
-                query2.addListenerForSingleValueEvent(new ValueEventListener() {
-                    int totalKeluar=0;
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-
-                            for (DataSnapshot d : dataSnapshot.getChildren()){
-                                Log.d(TAG, "onDataChangemas: "+d.getKey());
-                                ListModel listModel = d.getValue(ListModel.class);
-                                listModel.setListId(d.getKey());
-                                Log.d(TAG, "onDataChange: "+listModel.getJumlah());
-                                if (listModel.getTglExp()<=System.currentTimeMillis()){
-                                    if (obatModels.get(position).getObatId().equals(
-                                            listModel.getObatId())){
-                                        totalKeluar = totalKeluar+listModel.getJumlah();
-                                    }
-                                }
-
-                            }
-
-
-                        }
-                        //    holder.txtKeluar.setText("Total Keluar : "+String.valueOf(totalKeluar));
-                        int s = totalMasuk - totalKeluar;
-                        if (s>0){
-                            holder.txtWarnExp.setVisibility(View.VISIBLE);
-                            holder.txtWarnExp.setText(String.valueOf(s));
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-
-    private void getSisaStock(ViewHolder holder, int position) {
-        Query query =  mDatabase.child("listDataMasuk");
-        Query query2 =  mDatabase.child("listDataKeluar");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            int totalMasuk=0;
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-                    for (DataSnapshot d : dataSnapshot.getChildren()){
-                        Log.d(TAG, "onDataChangemas: "+d.getKey());
-                        ListModel listModel = d.getValue(ListModel.class);
-                        listModel.setListId(d.getKey());
-                        Log.d(TAG, "onDataChange: "+listModel.getJumlah());
-                        if (obatModels.get(position).getObatId().equals(
-                                listModel.getObatId())){
-                            totalMasuk = totalMasuk+listModel.getJumlah();
-                        }
-                    }
-
-
-                }
-               // holder.txtMasuk.setText("Total Masuk : "+String.valueOf(totalMasuk));
-                query2.addListenerForSingleValueEvent(new ValueEventListener() {
-                    int totalKeluar=0;
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-
-                            for (DataSnapshot d : dataSnapshot.getChildren()){
-                                Log.d(TAG, "onDataChangemas: "+d.getKey());
-                                ListModel listModel = d.getValue(ListModel.class);
-                                listModel.setListId(d.getKey());
-                                Log.d(TAG, "onDataChange: "+listModel.getJumlah());
-                                if (obatModels.get(position).getObatId().equals(
-                                        listModel.getObatId())){
-                                    totalKeluar = totalKeluar+listModel.getJumlah();
-                                }
-                            }
-
-
-                        }
-                    //    holder.txtKeluar.setText("Total Keluar : "+String.valueOf(totalKeluar));
-                        int s = totalMasuk - totalKeluar;
-                        if (s<=constant.maxStockSisa){
-                            holder.txtWarnSisa.setVisibility(View.VISIBLE);
-                            holder.txtWarnSisa.setText(String.valueOf(s));
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
 
 
 
@@ -328,8 +198,10 @@ public class ObatAdapter extends RecyclerView.Adapter<ObatAdapter.ViewHolder>imp
         builder.setView(view1);
         TextInputEditText edtName = view1.findViewById(R.id.edtName);
         TextInputEditText edtPack = view1.findViewById(R.id.edtPack);
+        TextInputEditText edtNoBatch = view1.findViewById(R.id.edtNoBatch);
         edtName.setText(obatModels.get(position).getName());
         edtPack.setText(obatModels.get(position).getPack());
+        edtNoBatch.setText(obatModels.get(position).getNoBatch());
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -337,6 +209,7 @@ public class ObatAdapter extends RecyclerView.Adapter<ObatAdapter.ViewHolder>imp
                 ObatModel obatModel = new ObatModel();
                 obatModel.setName(edtName.getText().toString().trim());
                 obatModel.setPack(edtPack.getText().toString().trim());
+                obatModel.setNoBatch(edtNoBatch.getText().toString().trim());
 
                 mDatabase.child("obatalkes").child(obatModels.get(position).getObatId())
                         .setValue(obatModel).addOnSuccessListener(new OnSuccessListener<Void>() {

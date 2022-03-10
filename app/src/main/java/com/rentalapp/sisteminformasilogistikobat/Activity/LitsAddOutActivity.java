@@ -393,7 +393,7 @@ public class LitsAddOutActivity extends AppCompatActivity {
                                 ListModel m = snapshot1.getValue(ListModel.class);
                                  sortBySumberId.add(new ObatModel(m.getObatId(),
                                          getObatName(m.getObatId())
-                                         ,String.valueOf(m.getTglExp())));
+                                         ,String.valueOf(m.getTglExp()),null));
                             }
 
                             if (finalI == listId.size()-1){

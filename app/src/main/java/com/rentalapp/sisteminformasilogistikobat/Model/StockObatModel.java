@@ -1,16 +1,17 @@
 package com.rentalapp.sisteminformasilogistikobat.Model;
 
 public class StockObatModel  {
-    private String obatId, name, pack;
+    private String obatId, name, pack,noBatch;
     private int sisaStock, stockExp;
 
     public StockObatModel() {
     }
 
-    public StockObatModel(String obatId, String name, String pack, int sisaStock, int stockExp) {
+    public StockObatModel(String obatId, String name, String pack, String noBatch, int sisaStock, int stockExp) {
         this.obatId = obatId;
         this.name = name;
         this.pack = pack;
+        this.noBatch = noBatch;
         this.sisaStock = sisaStock;
         this.stockExp = stockExp;
     }
@@ -39,6 +40,14 @@ public class StockObatModel  {
         this.pack = pack;
     }
 
+    public String getNoBatch() {
+        return noBatch;
+    }
+
+    public void setNoBatch(String noBatch) {
+        this.noBatch = noBatch;
+    }
+
     public int getSisaStock() {
         return sisaStock;
     }
@@ -54,8 +63,7 @@ public class StockObatModel  {
     public void setStockExp(int stockExp) {
         this.stockExp = stockExp;
     }
-
-//    @Override
+    //    @Override
 //    public int compareTo(StockObatModel o) {
 //        return Integer.compare(this.stockExp, o.stockExp);
 //    }
