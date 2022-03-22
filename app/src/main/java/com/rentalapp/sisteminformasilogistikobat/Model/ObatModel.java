@@ -4,23 +4,21 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ObatModel implements Parcelable {
-    private String obatId, name, pack,noBatch;
+    private String obatId, name, pack ;
 
     public ObatModel() {
     }
 
-    public ObatModel(String obatId, String name, String pack, String noBatch) {
+    public ObatModel(String obatId, String name, String pack ) {
         this.obatId = obatId;
         this.name = name;
         this.pack = pack;
-        this.noBatch = noBatch;
     }
 
     protected ObatModel(Parcel in) {
         obatId = in.readString();
         name = in.readString();
         pack = in.readString();
-        noBatch = in.readString();
     }
 
     public static final Creator<ObatModel> CREATOR = new Creator<ObatModel>() {
@@ -59,13 +57,6 @@ public class ObatModel implements Parcelable {
         this.pack = pack;
     }
 
-    public String getNoBatch() {
-        return noBatch;
-    }
-
-    public void setNoBatch(String noBatch) {
-        this.noBatch = noBatch;
-    }
 
     @Override
     public int describeContents() {
@@ -77,6 +68,5 @@ public class ObatModel implements Parcelable {
         parcel.writeString(obatId);
         parcel.writeString(name);
         parcel.writeString(pack);
-        parcel.writeString(noBatch);
     }
 }

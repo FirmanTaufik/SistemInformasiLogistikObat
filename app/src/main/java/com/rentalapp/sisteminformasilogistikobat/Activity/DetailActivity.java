@@ -30,6 +30,8 @@ import com.rentalapp.sisteminformasilogistikobat.Model.SupplierModel;
 import com.rentalapp.sisteminformasilogistikobat.R;
 import com.rentalapp.sisteminformasilogistikobat.Util.Constant;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
@@ -38,7 +40,7 @@ public class DetailActivity extends AppCompatActivity {
     private TableLayout tableLayout;
     private Constant constant;
     private ArrayList<ObatModel> obatModels;
-    private TextView txtSupplier, txtSumber,txtSumber1;
+    private TextView txtSupplier, txtSumber,txtSumber1,txtBatch;
     private Toolbar toolbar;
     private ArrayList<MasukModel> masukModels;
     private int position;
@@ -52,6 +54,7 @@ public class DetailActivity extends AppCompatActivity {
         constant = new Constant(this);
         obatModels = getIntent().getParcelableArrayListExtra("listObat");
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        txtBatch = findViewById(R.id.txtBatch);
         tableLayout = findViewById(R.id.tableLayout);
         txtSupplier = findViewById(R.id.txtSupplier);
         txtSumber = findViewById(R.id.txtSumber);
@@ -191,6 +194,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getDataKeluar() {
+        txtBatch.setVisibility(View.GONE);
          txtSumber.setVisibility(View.GONE);
         txtSumber1.setVisibility(View.VISIBLE);
         txtSupplier.setText(getIntent().getStringExtra("faskes"));
@@ -210,6 +214,7 @@ public class DetailActivity extends AppCompatActivity {
 
                             TextView txtSumber = view.findViewById(R.id.txtSumber);
                             TextView txtName = view.findViewById(R.id.txtName);
+                            TextView txtBatch = view.findViewById(R.id.txtBatch);
                             TextView txtNo = view.findViewById(R.id.txtNo);
                             TextView txtJmlMasuk = view.findViewById(R.id.txtJmlMasuk);
                             TextView txtTglExp = view.findViewById(R.id.txtTglExp);
@@ -218,6 +223,7 @@ public class DetailActivity extends AppCompatActivity {
                             txtJmlMasuk.setText(String.valueOf(l.getJumlah()));
                             txtName.setText(getNameObat(l.getObatId()));
                             txtSumber.setVisibility(View.VISIBLE);
+                            txtBatch.setVisibility(View.GONE);
                             txtSumber.setText(String.valueOf(constant.getSumberNameById(l.getSumberId())));
                             tableLayout.addView(view);
                         }
@@ -249,12 +255,14 @@ public class DetailActivity extends AppCompatActivity {
                             View view = LayoutInflater.from(DetailActivity.this).inflate(R.layout.list_data_tb,null, false);
                             TextView txtName = view.findViewById(R.id.txtName);
                             TextView txtNo = view.findViewById(R.id.txtNo);
+                            TextView txtBatch = view.findViewById(R.id.txtBatch);
                             TextView txtJmlMasuk = view.findViewById(R.id.txtJmlMasuk);
                             TextView txtTglExp = view.findViewById(R.id.txtTglExp);
                             txtNo.setText(String.valueOf(no++));
                             txtTglExp.setText(constant.changeFromLong(l.getTglExp()));
                             txtJmlMasuk.setText(String.valueOf(l.getJumlah()));
                             txtName.setText(getNameObat(l.getObatId()));
+                            txtBatch.setText(l.getNoBatch());
                             tableLayout.addView(view);
                         }
                     }

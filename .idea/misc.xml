@@ -3,8 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/activity_detail.xml" value="0.1" />
         <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/activity_obat_detail.xml" value="0.22" />
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/form_masuk.xml" value="0.18" />
         <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/form_obat.xml" value="0.10416666666666667" />
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/list_data_tb.xml" value="0.1" />
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/list_item.xml" value="0.1" />
         <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/list_obat.xml" value="0.1" />
       </map>
     </option>

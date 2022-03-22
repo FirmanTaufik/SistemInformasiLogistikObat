@@ -27,14 +27,13 @@ public class ObatDetailActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private Toolbar toolbar;
     private TextView txtPack, txtMasuk,
-            txtKeluar,txtSisa,txtNoBatch;
+            txtKeluar,txtSisa ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_obat_detail);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         toolbar = findViewById(R.id.toolbar);
-        txtNoBatch = findViewById(R.id.txtNoBatch);
         txtSisa = findViewById(R.id.txtSisa);
         txtKeluar = findViewById(R.id.txtKeluar);
         txtMasuk = findViewById(R.id.txtMasuk);
@@ -50,7 +49,6 @@ public class ObatDetailActivity extends AppCompatActivity {
         });
         toolbar.setTitle(getIntent().getStringExtra("name"));
         txtPack.setText(getIntent().getStringExtra("kemasan"));
-        txtNoBatch.setText(getIntent().getStringExtra("batch"));
         getMasuk();
         getKeluar();
         getSisaStock();

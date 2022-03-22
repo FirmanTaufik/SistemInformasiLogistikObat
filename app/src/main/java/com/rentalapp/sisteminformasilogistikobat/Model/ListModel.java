@@ -3,6 +3,7 @@ package com.rentalapp.sisteminformasilogistikobat.Model;
 public class ListModel {
     private String listId =null;
     private String obatId;
+    private String noBatch=null;
     private long  tglExp;
     private int  jumlah;
     private int sumberId;
@@ -10,9 +11,10 @@ public class ListModel {
     public ListModel() {
     }
 
-    public ListModel(String listId, String obatId, long tglExp, int jumlah, int sumberId) {
+    public ListModel(String listId, String obatId, String noBatch, long tglExp, int jumlah, int sumberId) {
         this.listId = listId;
         this.obatId = obatId;
+        this.noBatch = noBatch;
         this.tglExp = tglExp;
         this.jumlah = jumlah;
         this.sumberId = sumberId;
@@ -32,6 +34,14 @@ public class ListModel {
 
     public void setObatId(String obatId) {
         this.obatId = obatId;
+    }
+
+    public String getNoBatch() {
+        return noBatch;
+    }
+
+    public void setNoBatch(String noBatch) {
+        this.noBatch = noBatch;
     }
 
     public long getTglExp() {

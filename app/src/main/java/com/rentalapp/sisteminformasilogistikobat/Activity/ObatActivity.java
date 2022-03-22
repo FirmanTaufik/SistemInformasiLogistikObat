@@ -262,7 +262,7 @@ public class ObatActivity extends AppCompatActivity {
                         //    holder.txtKeluar.setText("Total Keluar : "+String.valueOf(totalKeluar));
                         int jmlExp = totalMasuk - totalKeluar;
                         stockObat.add(new StockObatModel(obatModel.getObatId(), obatModel.getName(),
-                                obatModel.getPack(), obatModel.getNoBatch(),
+                                obatModel.getPack(),
 
                                 sisa,jmlExp ));
 
@@ -324,14 +324,12 @@ public class ObatActivity extends AppCompatActivity {
         builder.setView(view1);
         TextInputEditText edtName = view1.findViewById(R.id.edtName);
         TextInputEditText edtPack = view1.findViewById(R.id.edtPack);
-        TextInputEditText edtNoBatch = view1.findViewById(R.id.edtNoBatch);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ObatModel obatModel = new ObatModel();
                 obatModel.setName(edtName.getText().toString().trim());
                 obatModel.setPack(edtPack.getText().toString().trim());
-                obatModel.setNoBatch(edtNoBatch.getText().toString().trim());
 
                 String id = mDatabase.child("obatalkes").push().getKey();
                 mDatabase.child("obatalkes").child(id)

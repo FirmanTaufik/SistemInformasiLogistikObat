@@ -393,7 +393,7 @@ public class LitsAddOutActivity extends AppCompatActivity {
                                 ListModel m = snapshot1.getValue(ListModel.class);
                                  sortBySumberId.add(new ObatModel(m.getObatId(),
                                          getObatName(m.getObatId())
-                                         ,String.valueOf(m.getTglExp()),null));
+                                         ,String.valueOf(m.getTglExp())));
                             }
 
                             if (finalI == listId.size()-1){
@@ -470,6 +470,7 @@ public class LitsAddOutActivity extends AppCompatActivity {
         builder.setView(view1);
         TextInputEditText edtTglExp =  view1.findViewById(R.id.edtTglExp);
         TextInputEditText edtJmlMasuk = view1.findViewById(R.id.edtJmlMasuk);
+        TextInputEditText edtNoBatch = view1.findViewById(R.id.edtNoBatch);
         JRSpinner spinnerObat = view1.findViewById(R.id.spinnerObat);
         edtTglExp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -515,6 +516,7 @@ public class LitsAddOutActivity extends AppCompatActivity {
                             Toast.makeText(LitsAddOutActivity.this,"Jumlah Masih Kosong", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        listModel.setNoBatch(edtNoBatch.getText().toString().trim());
                         listModel.setJumlah(Integer.valueOf(edtJmlMasuk.getText().toString().trim()));
                         listModels.add(listModel);
                         listAdapter.notifyDataSetChanged();

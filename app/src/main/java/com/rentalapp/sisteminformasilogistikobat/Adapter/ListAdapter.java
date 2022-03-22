@@ -49,6 +49,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import jrizani.jrspinner.JRSpinner;
 
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
+    private String TAG="ListAdapterTAG";
     private Context context;
     private ArrayList<ListModel> listModels;
     private ArrayList<ObatModel> obatModels;
@@ -92,7 +93,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         holder.txtKeluar.setVisibility(View.GONE);
         holder.txtName.setText( getObatName(listModels.get(position).getObatId()));
-        holder.txtMasuk.setText("Jumlah : "+listModels.get(position).getJumlah());
+        if (listModels.get(position).getNoBatch()!=null){
+            holder.txtMasuk.setText("No Batch :  "+listModels.get(position).getNoBatch() +"\n \n");
+        }
+        holder.txtMasuk.append("Jumlah : "+listModels.get(position).getJumlah());
         holder.txtSisa.setText("Tanggal Expired : "+constant.changeFromLong(listModels.get(position).getTglExp()));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -157,9 +161,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Edit");
         builder.setView(view1);
+        TextInputEditText edtNoBatch = view1.findViewById(R.id.edtNoBatch);
         TextInputLayout txtInputJml = view1.findViewById(R.id.txtInputJml);
         TextInputLayout txtInputSisa = view1.findViewById(R.id.txtInputSisa);
         TextInputLayout textInputLayout = view1.findViewById(R.id.textInputLayout);
+        TextInputLayout txtInputLayoutBatch = view1.findViewById(R.id.txtInputLayoutBatch);
         JRSpinner spinner = view1.findViewById(R.id.spinner);
         TextInputEditText edtSisa =  view1.findViewById(R.id.edtSisa);
         TextInputEditText edtTglExp =  view1.findViewById(R.id.edtTglExp);
@@ -167,12 +173,13 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         JRSpinner spinnerObat = view1.findViewById(R.id.spinnerObat);
         edtTglExp.setText(constant.changeFromLong(listModel.getTglExp()));
         edtJmlMasuk.setText(String.valueOf(listModel.getJumlah()));
-
+        edtNoBatch.setText(listModel.getNoBatch());
         if (!isIn){
             getSisaStock(listModel.getObatId(), edtSisa);
             txtInputJml.setHint("Jumlah Keluar");
             txtInputSisa.setVisibility(View.VISIBLE);
             textInputLayout.setVisibility(View.VISIBLE);
+            txtInputLayoutBatch.setVisibility(View.GONE);
             edtTglExp.setEnabled(false);
             spinner.setItems(constant.getSumberDanaNama(false));
             spinner.setText(constant.getSumberNameById(listModel.getSumberId()));
@@ -223,13 +230,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int sisa = Integer.valueOf(edtSisa.getText().toString());
-                        int jml = Integer.valueOf(edtJmlMasuk.getText().toString());
+                        if (!isIn){
+                            int sisa = Integer.valueOf(edtSisa.getText().toString());
+                            int jml = Integer.valueOf(edtJmlMasuk.getText().toString());
 
-                        if (jml>sisa){
-                            Toast.makeText(context,"Jumlah Keluar Terlalu Banyak", Toast.LENGTH_SHORT).show();
-                            return;
+                            if (jml>sisa){
+                                Toast.makeText(context,"Jumlah Keluar Terlalu Banyak", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                         }
+
+                        listModel.setNoBatch(edtNoBatch.getText().toString().trim());
                         listModel.setJumlah(Integer.valueOf(edtJmlMasuk.getText().toString().trim()));
                         listModels.set(position,listModel);
                         notifyDataSetChanged();

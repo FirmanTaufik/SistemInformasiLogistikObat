@@ -113,7 +113,6 @@ public class ObatAdapter extends RecyclerView.Adapter<ObatAdapter.ViewHolder>imp
                 intent.putExtra("obatId",obatModels.get(position).getObatId() );
                 intent.putExtra("kemasan","Kemasan : "+obatModels.get(position).getPack() );
                 intent.putExtra("name", obatModels.get(position).getName() );
-                intent.putExtra("batch", obatModels.get(position).getNoBatch());
                 context.startActivity(intent);
             }
         });
@@ -198,10 +197,8 @@ public class ObatAdapter extends RecyclerView.Adapter<ObatAdapter.ViewHolder>imp
         builder.setView(view1);
         TextInputEditText edtName = view1.findViewById(R.id.edtName);
         TextInputEditText edtPack = view1.findViewById(R.id.edtPack);
-        TextInputEditText edtNoBatch = view1.findViewById(R.id.edtNoBatch);
         edtName.setText(obatModels.get(position).getName());
         edtPack.setText(obatModels.get(position).getPack());
-        edtNoBatch.setText(obatModels.get(position).getNoBatch());
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -209,7 +206,6 @@ public class ObatAdapter extends RecyclerView.Adapter<ObatAdapter.ViewHolder>imp
                 ObatModel obatModel = new ObatModel();
                 obatModel.setName(edtName.getText().toString().trim());
                 obatModel.setPack(edtPack.getText().toString().trim());
-                obatModel.setNoBatch(edtNoBatch.getText().toString().trim());
 
                 mDatabase.child("obatalkes").child(obatModels.get(position).getObatId())
                         .setValue(obatModel).addOnSuccessListener(new OnSuccessListener<Void>() {

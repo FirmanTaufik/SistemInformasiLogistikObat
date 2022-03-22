@@ -83,7 +83,6 @@
                     android:layout_height="wrap_content"
                     android:elevation="4dp"
                     android:padding="5dp"
-                    android:text="Content"
                     android:textColor="@android:color/darker_gray"  />
 
                 <TextView
@@ -92,7 +91,6 @@
                     android:layout_height="wrap_content"
                     android:elevation="4dp"
                     android:padding="5dp"
-                    android:text="Content"
                     android:textColor="@android:color/darker_gray"  />
                 <TextView
                     android:id="@+id/txtKeluar"
@@ -100,7 +98,6 @@
                     android:layout_height="wrap_content"
                     android:elevation="4dp"
                     android:padding="5dp"
-                    android:text="Content"
                     android:textColor="@android:color/darker_gray"  />
                 <TextView
                     android:id="@+id/txtSisa"
@@ -108,7 +105,6 @@
                     android:layout_height="wrap_content"
                     android:elevation="4dp"
                     android:padding="5dp"
-                    android:text="Content"
                     android:textColor="@android:color/darker_gray"  />
             </LinearLayout>
         </net.cachapa.expandablelayout.ExpandableLayout>
