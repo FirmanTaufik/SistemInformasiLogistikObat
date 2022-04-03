@@ -301,6 +301,8 @@ public class LitsAddOutActivity extends AppCompatActivity {
         JRSpinner spinnerObat = view1.findViewById(R.id.spinnerObat);
         JRSpinner spinner = view1.findViewById(R.id.spinner);
         edtTglExp.setEnabled(false);
+        TextInputLayout txtInputLayoutBatch = view1.findViewById(R.id.txtInputLayoutBatch);
+        txtInputLayoutBatch.setVisibility(View.GONE);
 
         spinner.setItems(constant.getSumberDanaNama(false));
 
