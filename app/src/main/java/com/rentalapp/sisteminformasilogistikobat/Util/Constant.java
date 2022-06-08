@@ -2,9 +2,18 @@ package com.rentalapp.sisteminformasilogistikobat.Util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.rentalapp.sisteminformasilogistikobat.Adapter.JabatanModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.FaskesModel;
+import com.rentalapp.sisteminformasilogistikobat.Model.KaryawanModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.ObatModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.SumberDanaModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.SupplierModel;
@@ -16,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Constant {
+    String TAG ="ConstantTAG";
     private Context context;
 
     public Constant(Context context) {
@@ -82,7 +92,7 @@ public class Constant {
         return dateFormater.format(date);
     }
 
-    private ArrayList<SumberDanaModel> sumberDanaModels = new ArrayList<>();
+   // private ArrayList<SumberDanaModel> sumberDanaModels =  pubArray.sumberDanaModels;
     public ArrayList<ObatModel> obatModels ;
 
     public void setListObatAlkes(ArrayList<ObatModel> obatModels){
@@ -107,27 +117,50 @@ public class Constant {
     }
 
     public ArrayList<SumberDanaModel> getSumberDana(){
-        sumberDanaModels.add(new SumberDanaModel(1, "APBD I"));
-        sumberDanaModels.add(new SumberDanaModel(2, "APBD II"));
-        sumberDanaModels.add(new SumberDanaModel(3, "PROGRAM"));
-        sumberDanaModels.add(new SumberDanaModel(4, "DAK"));
-        sumberDanaModels.add(new SumberDanaModel(5, "Dan Lain-Lain"));
-        return sumberDanaModels;
+      //  sumberDanaModels.clear();
+//        sumberDanaModels.add(new SumberDanaModel(1, "APBD I"));
+//        sumberDanaModels.add(new SumberDanaModel(2, "APBD II"));
+//        sumberDanaModels.add(new SumberDanaModel(3, "PROGRAM"));
+//        sumberDanaModels.add(new SumberDanaModel(4, "DAK"));
+//        sumberDanaModels.add(new SumberDanaModel(5, "Dan Lain-Lain"));
+          DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+          mDatabase.child("sumberDana")
+                  .addValueEventListener(new ValueEventListener() {
+                      @Override
+                      public void onDataChange(@NonNull DataSnapshot snapshot) {
+                          pubArray.sumberDanaModels.clear();
+                          for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                              SumberDanaModel dana = snapshot1.getValue(SumberDanaModel.class);
+                              Log.d(TAG, "onDataChange: "+dana.getName());
+                              if (getSumberNameById (dana.getSumberId())==null){
+                                  pubArray. sumberDanaModels.add(new SumberDanaModel(dana.getSumberId(), dana.getName()));
+
+                              }
+                          }
+                      }
+
+                      @Override
+                      public void onCancelled(@NonNull DatabaseError error) {
+                          Log.d(TAG, "onCancelled: "+error.getMessage());
+                      }
+                  });
+
+        return  pubArray. sumberDanaModels;
     }
 
     public String[]  getSumberDanaNama(boolean isMutasi){
         String[] namaSumber;
-
+        Log.d(TAG, "getSumberDanaNama: "+pubArray.sumberDanaModels.size());
         if (isMutasi){
-            namaSumber   = new String[sumberDanaModels.size()+1];
+            namaSumber   = new String[pubArray.sumberDanaModels.size()+1];
             namaSumber[0] = "Semua Sumber";
-            for (int i =1; i<sumberDanaModels.size()+1; i++){
-                namaSumber[i] =sumberDanaModels.get(i-1).getName();
+            for (int i =1; i<pubArray.sumberDanaModels.size()+1; i++){
+                namaSumber[i] =pubArray.sumberDanaModels.get(i-1).getName();
             }
         }else {
-            namaSumber   = new String[sumberDanaModels.size()];
-            for (int i =0; i<sumberDanaModels.size(); i++){
-                namaSumber[i] =sumberDanaModels.get(i).getName();
+            namaSumber   = new String[pubArray.sumberDanaModels.size()];
+            for (int i =0; i<pubArray.sumberDanaModels.size(); i++){
+                namaSumber[i] =pubArray.sumberDanaModels.get(i).getName();
             }
         }
 
@@ -139,16 +172,16 @@ public class Constant {
             if (pos==0) {
                 return 0;
             }else {
-                return  sumberDanaModels.get(pos-1).getSumberId();
+                return  pubArray.sumberDanaModels.get(pos-1).getSumberId();
             }
         }
-        return sumberDanaModels.get(pos).getSumberId();
+        return pubArray.sumberDanaModels.get(pos).getSumberId();
     }
 
     public String getSumberNameById(int id){
-        for (int i =0; i<sumberDanaModels.size(); i++){
-            if (sumberDanaModels.get(i).getSumberId()==id){
-                return sumberDanaModels.get(i).getName();
+        for (int i =0; i<pubArray.sumberDanaModels.size(); i++){
+            if (pubArray.sumberDanaModels.get(i).getSumberId()==id){
+                return pubArray.sumberDanaModels.get(i).getName();
             }
         }
         return null;

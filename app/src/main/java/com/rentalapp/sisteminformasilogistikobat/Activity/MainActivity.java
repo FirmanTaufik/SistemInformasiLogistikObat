@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rentalapp.sisteminformasilogistikobat.Model.ObatModel;
+import com.rentalapp.sisteminformasilogistikobat.Model.SumberDanaModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.SupplierModel;
 import com.rentalapp.sisteminformasilogistikobat.Model.UserModel;
 import com.rentalapp.sisteminformasilogistikobat.R;
@@ -33,6 +34,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
+    String TAG ="MainActivityTAG";
     private Constant constant;
     private DatabaseReference mDatabase;
     private ArrayList <ObatModel> obatModels;
@@ -85,6 +87,27 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+
+       // uploadSumberDana();
+    }
+
+    private void uploadSumberDana() {
+        Log.d(TAG, "uploadSumberDana: "+constant.getSumberDana().size());
+        for (int i=0 ; i <constant.getSumberDana().size();i++  ) {
+            SumberDanaModel sumber = constant.getSumberDana().get(i);
+
+
+            String key = mDatabase.child("sumberDana").push().getKey();
+            mDatabase.child("sumberDana").child(key)
+                    .setValue(sumber)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d(TAG, "onSuccess: ");
+                        }
+                    });
+        }
+        
     }
 
     private void getUserInfo() {
@@ -224,5 +247,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void toKaryawan(View view) {
         startActivity(new Intent(MainActivity.this, KaryawanActivity.class));
+    }
+
+    public void toSumber(View view) {
+        startActivity(new Intent(MainActivity.this, SumbrActivity.class));
     }
 }

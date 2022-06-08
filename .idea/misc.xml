@@ -3,13 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/drawable/ic_baseline_payments_24.xml" value="0.1" />
         <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/activity_detail.xml" value="0.1" />
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/activity_lits_add_out.xml" value="0.22" />
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/activity_obat_detail.xml" value="0.22" />
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/activity_sumbr.xml" value="0.12239583333333333" />
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/activity_supplier.xml" value="0.12239583333333333" />
         <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/form_masuk.xml" value="0.18" />
         <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/form_obat.xml" value="0.10416666666666667" />
         <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/list_data_tb.xml" value="0.1" />
-        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/list_item.xml" value="0.1" />
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/list_item.xml" value="0.18" />
         <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/list_obat.xml" value="0.1" />
+        <entry key="..\:/Android Studio/Duit/Sistem Informasi Logistik Obat/app/src/main/res/layout/list_sumber.xml" value="0.25" />
       </map>
     </option>
   </component>

@@ -4,6 +4,9 @@ public class SumberDanaModel {
     private int sumberId;
     private String  name;
 
+    public SumberDanaModel() {
+    }
+
     public SumberDanaModel(int sumberId, String name) {
         this.sumberId = sumberId;
         this.name = name;

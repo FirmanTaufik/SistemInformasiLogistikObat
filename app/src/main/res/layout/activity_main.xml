@@ -113,6 +113,42 @@
                </com.balysv.materialripple.MaterialRippleLayout>
             </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="5dp"
+                app:cardUseCompatPadding="true"
+                app:cardElevation="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+               <com.balysv.materialripple.MaterialRippleLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                  <LinearLayout
+                      android:gravity="center"
+                      android:onClick="toSumber"
+                      android:padding="5dp"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+
+                     <ImageView
+                         android:src="@drawable/ic_baseline_payments_24"
+                         android:layout_width="50dp"
+                         android:layout_height="50dp"/>
+
+                     <TextView
+                         style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                         android:layout_marginLeft="10dp"
+                         android:layout_gravity="center_vertical"
+                         android:gravity="center_vertical"
+                         android:text="Sumber Dana"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"/>
+
+
+                  </LinearLayout>
+               </com.balysv.materialripple.MaterialRippleLayout>
+            </androidx.cardview.widget.CardView>
+
 
             <androidx.cardview.widget.CardView
                 app:cardCornerRadius="5dp"
